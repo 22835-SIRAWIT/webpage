@@ -6,7 +6,7 @@
     <title>หน้าแรก | Student Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Cinzel:wght@900&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -26,12 +26,12 @@
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
-            /* ตั้งค่าภาพพื้นหลัง Cid Kagenou */
             background-image: linear-gradient(rgba(5, 2, 10, 0.75), rgba(5, 2, 10, 0.85)), url('images/shadow-bg.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            overflow-x: hidden;
         }
 
         a { text-decoration: none; transition: all 0.3s ease; }
@@ -91,9 +91,7 @@
             padding: 3rem 2rem;
         }
 
-        .hero-section {
-            padding: 3rem 0;
-        }
+        .hero-section { padding: 3rem 0; }
 
         .hero-container {
             display: flex;
@@ -143,7 +141,7 @@
             margin-bottom: 2.5rem;
         }
 
-        .hero-actions { display: flex; gap: 1.2rem; }
+        .hero-actions { display: flex; gap: 1.2rem; flex-wrap: wrap; }
 
         /* Buttons */
         .btn {
@@ -178,6 +176,22 @@
             background: rgba(192, 132, 252, 0.2);
             border-color: var(--purple-neon);
             transform: translateY(-3px);
+        }
+
+        /* ปุ่มพิเศษ Atomic */
+        .btn-atomic {
+            background: #000;
+            color: #c084fc;
+            border: 2px solid #c084fc;
+            box-shadow: 0 0 15px #c084fc;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-atomic:hover {
+            background: #c084fc;
+            color: #000;
+            box-shadow: 0 0 35px #c084fc;
+            transform: scale(1.05);
         }
 
         /* Profile Visual */
@@ -276,19 +290,74 @@
             font-size: 0.85rem;
         }
 
-        @media (max-width: 900px) {
-            .hero-container {
-                flex-direction: column-reverse;
-                text-align: center;
-                padding: 2rem;
-            }
-            .hero-actions { justify-content: center; }
-            .highlight-grid { grid-template-columns: 1fr; }
-            .footer-container { flex-direction: column; gap: 2rem; text-align: center; }
+        /* --- ATOMIC OVERLAY EFFECT --- */
+        #atomic-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        #atomic-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .atomic-text {
+            font-family: 'Cinzel', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 20px #a855f7, 0 0 40px #a855f7, 0 0 80px #a855f7;
+            letter-spacing: 15px;
+            transform: scale(0.5);
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #atomic-overlay.active .atomic-text {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        .atomic-blast {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff 0%, #a855f7 40%, transparent 80%);
+            box-shadow: 0 0 100px #a855f7;
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        #atomic-overlay.active .atomic-blast {
+            animation: blastAnim 2.5s forwards 1.2s;
+        }
+
+        @keyframes blastAnim {
+            0% { transform: scale(0); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: scale(300); opacity: 0; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Overlay สำหรับฉาก I AM ATOMIC -->
+    <div id="atomic-overlay">
+        <div class="atomic-blast"></div>
+        <div class="atomic-text">I AM ATOMIC</div>
+    </div>
+
     <header class="navbar-header">
         <nav class="navbar">
             <a href="index.html" class="nav-logo">PORTFOLIO<span>.M3</span></a>
@@ -312,6 +381,8 @@
                     <div class="hero-actions">
                         <a href="profile.html" class="btn btn-primary">รู้จักฉันมากขึ้น</a>
                         <a href="hobby.html" class="btn btn-secondary">ดูงานอดิเรกของฉัน</a>
+                        <!-- ปุ่มกดพิเศษ -->
+                        <button onclick="triggerAtomic()" class="btn btn-atomic">🔮 กดปลดปล่อยพลัง (F5)</button>
                     </div>
                 </div>
                 <div class="hero-visual">
@@ -362,5 +433,53 @@
             <p>&copy; 2026 Student Portfolio Project. All Rights Reserved.</p>
         </div>
     </footer>
+
+    <!-- Script สำหรับเล่นเอฟเฟกต์ -->
+    <script>
+        function triggerAtomic() {
+            const overlay = document.getElementById('atomic-overlay');
+            overlay.classList.add('active');
+
+            // ซาวด์เอฟเฟกต์การระเบิดด้วย Web Audio API (ไม่ต้องใช้นำเข้าไฟล์เสียงภายนอก)
+            playAtomicSound();
+
+            // หลังจากแสดงผล 3.5 วินาที ให้ปิดเอฟเฟกต์ลง
+            setTimeout(() => {
+                overlay.classList.remove('active');
+            }, 3500);
+        }
+
+        // จับเหตุการณ์การกดปุ่ม F5
+        window.addEventListener('keydown', function(e) {
+            if (e.key === 'F5') {
+                e.preventDefault(); // ป้องกันไม่ให้เบราว์เซอร์รีเฟรชหน้าเว็บแบบปกติ
+                triggerAtomic();
+            }
+        });
+
+        // ฟังก์ชันสร้างเสียงระเบิดพลังม่วง
+        function playAtomicSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 3);
+
+                gain.gain.setValueAtTime(0.5, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 3);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 3);
+            } catch(e) {
+                console.log("Audio not supported");
+            }
+        }
+    </script>
 </body>
 </html>
