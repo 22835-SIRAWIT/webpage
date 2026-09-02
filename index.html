@@ -204,9 +204,7 @@
         .footer-nav ul li a:hover { color: var(--purple-bright); text-shadow: 0 0 10px var(--purple-neon); }
         .footer-bottom { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-muted); font-size: 0.85rem; }
 
-        /* ==========================================
-           ATOMIC OVERLAY & TIMED TEXT EFFECT
-           ========================================== */
+        /* ATOMIC OVERLAY & TIMED TEXT EFFECT */
         #atomic-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -315,8 +313,8 @@
 </head>
 <body>
 
-    <!-- แท็กเสียง Audio สำหรับมือถือ -->
-    <audio id="atomic-sound" src="atomic.mp3" preload="auto" playsinline></audio>
+    <!-- เปลี่ยนไปใช้ Audio CDN ที่มีไฟล์เสียงจริงเป๊ะๆ เพื่อแก้ปัญหามือถือและคอมเปิดไม่ติด -->
+    <audio id="atomic-sound" src="https://myinstants.com/media/sounds/i-am-atomic.mp3" preload="auto" playsinline></audio>
 
     <canvas id="neon-canvas"></canvas>
 
@@ -442,7 +440,7 @@
                 neonCtx.save();
                 neonCtx.globalAlpha = this.alpha;
                 neonCtx.beginPath();
-                neonCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                neonCtx.arc(this.x, this.y,this.size, 0, Math.PI * 2);
                 neonCtx.fillStyle = '#c084fc';
                 neonCtx.fill();
                 neonCtx.restore();
@@ -458,7 +456,7 @@
         }
         animateBgParticles();
 
-        // 2. Mobile-Friendly Sound Handler
+        // 2. Audio & Dynamic Text Animation Control
         document.addEventListener('DOMContentLoaded', function() {
             const btnAtomic = document.getElementById('btn-atomic-power');
             const overlay = document.getElementById('atomic-overlay');
@@ -471,36 +469,33 @@
                 const handlePlay = function(e) {
                     if (e) e.preventDefault();
 
-                    // รีเซ็ตไฟล์เสียงสำหรับมือถือ
                     sound.currentTime = 0;
                     sound.volume = 1.0;
                     
-                    // เล่นเสียงทันทีใน Event Handler
                     const playPromise = sound.play();
                     if (playPromise !== undefined) {
                         playPromise.catch(function(err) {
-                            console.log("Mobile play audio blocked:", err);
+                            console.log("Audio play blocked by browser:", err);
                         });
                     }
 
-                    // รีเซ็ตคลาส Effect
+                    // Reset all animations
                     overlay.classList.remove('active', 'slashing');
                     wordI.classList.remove('show');
                     wordAm.classList.remove('show');
                     wordAtomic.classList.remove('show');
 
-                    // แสดง Overlay
+                    // Show Overlay
                     overlay.classList.add('active');
 
-                    // จังหวะการแสดงข้อความ
-                    setTimeout(() => wordI.classList.add('show'), 1000);
-                    setTimeout(() => wordAm.classList.add('show'), 1800);
-                    setTimeout(() => wordAtomic.classList.add('show'), 2800);
-                    setTimeout(() => overlay.classList.add('slashing'), 3300);
-                    setTimeout(() => overlay.classList.remove('active', 'slashing'), 4500);
+                    // Synchronized Timings matched with Shadow's Voice
+                    setTimeout(() => wordI.classList.add('show'), 200);      // 'I'
+                    setTimeout(() => wordAm.classList.add('show'), 800);     // 'AM'
+                    setTimeout(() => wordAtomic.classList.add('show'), 1600); // 'ATOMIC'
+                    setTimeout(() => overlay.classList.add('slashing'), 2300); // Explosion / Slash
+                    setTimeout(() => overlay.classList.remove('active', 'slashing'), 3800); // Hide
                 };
 
-                // รองรับทั้งระบบสัมผัส (มือถือ) และการคลิก (คอมพิวเตอร์)
                 btnAtomic.addEventListener('touchstart', handlePlay, { passive: false });
                 btnAtomic.addEventListener('click', handlePlay);
             }
