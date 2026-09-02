@@ -162,6 +162,7 @@
             box-shadow: 0 0 15px #c084fc, inset 0 0 10px rgba(192, 132, 252, 0.3);
             position: relative; overflow: hidden;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .btn-atomic:hover {
             background: #c084fc; color: #000;
@@ -224,7 +225,6 @@
             pointer-events: auto;
         }
 
-        /* เส้นแสงฟันดาบ */
         .slash-effect {
             position: absolute;
             top: 50%; left: -20%;
@@ -261,6 +261,21 @@
             gap: 1.5rem;
         }
 
+        @media (max-width: 768px) {
+            .atomic-text-wrapper {
+                font-size: 2.2rem;
+                letter-spacing: 4px;
+                gap: 0.8rem;
+            }
+            .hero-container {
+                flex-direction: column;
+                padding: 1.8rem;
+            }
+            .highlight-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .word-group {
             display: flex;
             opacity: 0;
@@ -269,7 +284,6 @@
             filter: blur(8px);
         }
 
-        /* คลาสสั่งเรืองแสงเมื่อคำนั้นๆ แสดงผล */
         .word-group.show {
             opacity: 1;
             transform: scale(1);
@@ -277,13 +291,11 @@
             text-shadow: 0 0 20px #c084fc, 0 0 40px #a855f7;
         }
 
-        /* ตัวอักษรแต่ละตัวสำหรับการกระจัดกระจาย */
         .shatter-char {
             display: inline-block;
             transition: transform 0.8s cubic-bezier(0.1, 0.8, 0.2, 1), opacity 0.7s ease-out, filter 0.7s ease-out;
         }
 
-        /* ทิศทางการปลิวหายของแต่ละกลุ่มคำตอนโดนฟัน */
         #atomic-overlay.slashing .word-i .shatter-char {
             transform: translate3d(-300px, -200px, 0) rotate(-140deg) scale(0.3);
             opacity: 0;
@@ -302,6 +314,9 @@
     </style>
 </head>
 <body>
+
+    <!-- แท็กเสียง Audio สำหรับมือถือ -->
+    <audio id="atomic-sound" src="atomic.mp3" preload="auto" playsinline></audio>
 
     <canvas id="neon-canvas"></canvas>
 
@@ -443,60 +458,51 @@
         }
         animateBgParticles();
 
-        // 2. Exact Sound Syncing Script
+        // 2. Mobile-Friendly Sound Handler
         document.addEventListener('DOMContentLoaded', function() {
             const btnAtomic = document.getElementById('btn-atomic-power');
             const overlay = document.getElementById('atomic-overlay');
+            const sound = document.getElementById('atomic-sound');
             const wordI = document.getElementById('w-i');
             const wordAm = document.getElementById('w-am');
             const wordAtomic = document.getElementById('w-atomic');
 
-            if (btnAtomic && overlay) {
-                btnAtomic.addEventListener('click', function(e) {
-                    e.preventDefault();
+            if (btnAtomic && overlay && sound) {
+                const handlePlay = function(e) {
+                    if (e) e.preventDefault();
+
+                    // รีเซ็ตไฟล์เสียงสำหรับมือถือ
+                    sound.currentTime = 0;
+                    sound.volume = 1.0;
                     
-                    // ลบทุก Class และการตั้งค่าเดิมออก
+                    // เล่นเสียงทันทีใน Event Handler
+                    const playPromise = sound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(function(err) {
+                            console.log("Mobile play audio blocked:", err);
+                        });
+                    }
+
+                    // รีเซ็ตคลาส Effect
                     overlay.classList.remove('active', 'slashing');
                     wordI.classList.remove('show');
                     wordAm.classList.remove('show');
                     wordAtomic.classList.remove('show');
-                    
-                    // เปิดหน้าจอดำ Overlay
+
+                    // แสดง Overlay
                     overlay.classList.add('active');
 
-                    // โหลดและตั้งค่าเสียงเป็น 100% (1.0)
-                    const sound = new Audio('atomic.mp3');
-                    sound.volume = 1.0; 
-                    sound.currentTime = 0; 
-                    sound.play().catch(function(error) {
-                        console.warn("ไม่สามารถเล่นเสียงได้:", error);
-                    });
+                    // จังหวะการแสดงข้อความ
+                    setTimeout(() => wordI.classList.add('show'), 1000);
+                    setTimeout(() => wordAm.classList.add('show'), 1800);
+                    setTimeout(() => wordAtomic.classList.add('show'), 2800);
+                    setTimeout(() => overlay.classList.add('slashing'), 3300);
+                    setTimeout(() => overlay.classList.remove('active', 'slashing'), 4500);
+                };
 
-                    // 1. จังหวะพูดคำว่า "I" (ประมาณวินาทีที่ 1.0)
-                    setTimeout(() => {
-                        wordI.classList.add('show');
-                    }, 1000);
-
-                    // 2. จังหวะพูดคำว่า "AM" (ประมาณวินาทีที่ 1.8)
-                    setTimeout(() => {
-                        wordAm.classList.add('show');
-                    }, 1800);
-
-                    // 3. จังหวะพูดคำว่า "ATOMIC" (ประมาณวินาทีที่ 2.8)
-                    setTimeout(() => {
-                        wordAtomic.classList.add('show');
-                    }, 2800);
-
-                    // 4. จังหวะเสียงฟัน / ตู้ม (ประมาณวินาทีที่ 3.3) -> ฟันและแตกกระจาย
-                    setTimeout(() => {
-                        overlay.classList.add('slashing');
-                    }, 3300);
-
-                    // 5. ปิด Overlay กลับสู่หน้าปกติ (ประมาณวินาทีที่ 4.5)
-                    setTimeout(() => {
-                        overlay.classList.remove('active', 'slashing');
-                    }, 4500);
-                });
+                // รองรับทั้งระบบสัมผัส (มือถือ) และการคลิก (คอมพิวเตอร์)
+                btnAtomic.addEventListener('touchstart', handlePlay, { passive: false });
+                btnAtomic.addEventListener('click', handlePlay);
             }
         });
     </script>
