@@ -471,4 +471,16 @@
 
                     // ฟันดาบระเบิดนีออน (1.1 วินาที)
                     setTimeout(function() {
-                  
+                        overlay.classList.add('slashing');
+                    }, 1100);
+
+                    // ซ่อน Overlay กลับหน้าปกติ (2.6 วินาที)
+                    setTimeout(function() {
+                        overlay.classList.remove('active', 'slashing');
+                    }, 2600);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
