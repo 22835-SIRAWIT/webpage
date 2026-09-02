@@ -3,374 +3,507 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atomic Effect Test</title>
+    <title>หน้าแรก | Student Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Cinzel:wght@900&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --purple-bright: #d8b4fe;
+            --purple-neon: #c084fc;
+            --purple-glow: rgba(192, 132, 252, 0.6);
+            --purple-intense: #a855f7;
+            --bg-card: rgba(15, 7, 26, 0.75);
+            --border-purple: rgba(192, 132, 252, 0.4);
+            --text-primary: #ffffff;
+            --text-muted: #e9d5ff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #0f0f15;
-            height: 100vh;
-            font-family: sans-serif;
+            font-family: 'Prompt', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            background-color: #05020a;
+            background-image: linear-gradient(rgba(5, 2, 10, 0.8), rgba(5, 2, 10, 0.9)), url('images/shadow-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* ปุ่มเปิดเอฟเฟกต์ */
-        .atomic-trigger-btn {
+        /* Ambient Background Glow */
+        body::before {
+            content: '';
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 18px 40px;
-            font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 3px;
+            top: -20%; left: -20%;
+            width: 140%; height: 140%;
+            background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(192, 132, 252, 0.12) 0%, transparent 50%);
+            z-index: -2;
+            pointer-events: none;
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+            100% { transform: scale(1.1) rotate(3deg); opacity: 1; }
+        }
+
+        #neon-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        a { text-decoration: none; transition: all 0.3s ease; }
+
+        /* Navigation Header */
+        .navbar-header {
+            background: rgba(10, 4, 18, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-purple);
+            position: sticky; top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 25px rgba(168, 85, 247, 0.2);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+        }
+
+        .nav-logo {
+            font-size: 1.6rem;
+            font-weight: 700;
             color: #fff;
-            background: linear-gradient(135deg, #7000ff, #b000ff);
-            border: none;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-logo span {
+            color: var(--purple-neon);
+            text-shadow: 0 0 15px var(--purple-neon), 0 0 30px var(--purple-intense);
+        }
+
+        .nav-menu { list-style: none; display: flex; gap: 2rem; }
+        .nav-link { color: var(--text-muted); font-weight: 400; position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 0%; height: 2px;
+            background: var(--purple-neon);
+            box-shadow: 0 0 10px var(--purple-neon);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link:hover, .nav-link.active { color: #fff; text-shadow: 0 0 12px var(--purple-neon); }
+
+        /* Main Content */
+        .main-content { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+        .hero-section { padding: 3rem 0; }
+        .hero-container {
+            display: flex; align-items: center; justify-content: space-between; gap: 3rem;
+            background: var(--bg-card); padding: 3rem; border-radius: 24px;
+            border: 1px solid var(--border-purple);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2), inset 0 0 15px rgba(192, 132, 252, 0.1);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .hero-container:hover {
+            border-color: var(--purple-neon);
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.35), inset 0 0 25px rgba(192, 132, 252, 0.15);
+        }
+
+        .hero-text { flex: 1.2; }
+        .badge {
+            display: inline-block;
+            background: rgba(192, 132, 252, 0.12);
+            border: 1px solid var(--purple-neon);
+            color: var(--purple-bright);
+            padding: 0.4rem 1.2rem;
             border-radius: 50px;
-            box-shadow: 0 0 25px rgba(176, 0, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 100;
+            font-size: 0.85rem; font-weight: 500; margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px var(--purple-glow);
+            animation: badgeGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes badgeGlow {
+            from { box-shadow: 0 0 10px var(--purple-glow); }
+            to { box-shadow: 0 0 22px var(--purple-neon); }
         }
 
-        .atomic-trigger-btn:hover {
-            transform: translate(-50%, -50%) scale(1.08);
-            box-shadow: 0 0 40px rgba(208, 0, 255, 1);
+        .hero-title { font-size: 2.6rem; font-weight: 700; line-height: 1.3; margin-bottom: 1.2rem; }
+        .gradient-text {
+            background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 40%, #c084fc 80%, #a855f7 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(192, 132, 252, 0.4);
+        }
+        .hero-subtitle { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 2.5rem; }
+        .hero-actions { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+
+        .btn { padding: 0.8rem 1.8rem; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(135deg, #a855f7, #6b21a8); color: #fff; box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); border: none; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 35px rgba(168, 85, 247, 0.9), 0 0 10px #fff; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid var(--border-purple); backdrop-filter: blur(8px); }
+        .btn-secondary:hover { background: rgba(192, 132, 252, 0.2); border-color: var(--purple-neon); box-shadow: 0 0 20px var(--purple-glow); transform: translateY(-3px); }
+
+        .btn-atomic {
+            background: #000; color: #c084fc; border: 2px solid #c084fc;
+            box-shadow: 0 0 15px #c084fc, inset 0 0 10px rgba(192, 132, 252, 0.3);
+            position: relative; overflow: hidden;
+            user-select: none;
+        }
+        .btn-atomic:hover {
+            background: #c084fc; color: #000;
+            box-shadow: 0 0 40px #c084fc, 0 0 80px rgba(192, 132, 252, 0.6);
+            transform: scale(1.05); font-weight: 700;
         }
 
-        /* ================= OVERLAY ================= */
-        #atomicOverlay{
-            position:fixed;
-            inset:0;
-            z-index:9999;
-            display:none;
-            align-items:center;
-            justify-content:center;
-            overflow:hidden;
-            background:
-                radial-gradient(
-                    circle at center,
-                    rgba(190,0,255,.45),
-                    rgba(50,0,100,.35) 30%,
-                    rgba(0,0,0,.97) 75%
-                );
+        .hero-visual { flex: 0.8; display: flex; justify-content: center; position: relative; }
+        .profile-card-wrapper {
+            position: relative; z-index: 2; border-radius: 20px; overflow: hidden;
+            border: 2px solid var(--purple-neon);
+            box-shadow: 0 0 35px var(--purple-glow), 0 0 70px rgba(168, 85, 247, 0.3);
+            transition: all 0.4s ease;
+        }
+        .profile-card-wrapper:hover { transform: scale(1.03) rotate(1deg); box-shadow: 0 0 50px var(--purple-neon), 0 0 90px var(--purple-intense); }
+        .profile-card-wrapper img { width: 100%; max-width: 320px; height: auto; display: block; object-fit: cover; }
+
+        .quick-highlights { margin-top: 3rem; }
+        .highlight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .glass-card {
+            background: var(--bg-card); border: 1px solid var(--border-purple);
+            border-radius: 20px; padding: 2rem; text-align: center; backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: all 0.4s ease;
+        }
+        .glass-card:hover { transform: translateY(-8px); border-color: var(--purple-neon); box-shadow: 0 0 35px var(--purple-glow), inset 0 0 15px rgba(192, 132, 252, 0.2); }
+        .stat-number { font-size: 2.8rem; font-weight: 700; color: var(--purple-bright); text-shadow: 0 0 20px var(--purple-glow), 0 0 40px var(--purple-intense); }
+        .stat-label { color: var(--text-muted); }
+
+        .site-footer {
+            background: rgba(8, 3, 15, 0.95); border-top: 1px solid var(--border-purple);
+            padding: 3rem 0 1.5rem; margin-top: 5rem; backdrop-filter: blur(10px);
+            box-shadow: 0 -10px 30px rgba(168, 85, 247, 0.1);
+        }
+        .footer-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; }
+        .footer-info p, .footer-nav ul li a { color: var(--text-muted); font-size: 0.9rem; }
+        .footer-nav h4 { color: #fff; margin-bottom: 0.8rem; text-shadow: 0 0 8px var(--purple-neon); }
+        .footer-nav ul { list-style: none; }
+        .footer-nav ul li { margin-bottom: 0.4rem; }
+        .footer-nav ul li a:hover { color: var(--purple-bright); text-shadow: 0 0 10px var(--purple-neon); }
+        .footer-bottom { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-muted); font-size: 0.85rem; }
+
+        /* ==========================================
+           ATOMIC OVERLAY - CUT & NEON EXPLOSION
+           ========================================== */
+        #atomic-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(3, 1, 8, 0.97);
+            z-index: 999999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            pointer-events: none;
         }
 
-        #atomicOverlay.active{
-            display:flex;
+        #atomic-overlay.active {
+            display: flex;
+            pointer-events: auto;
         }
 
-        /* ปุ่มปิด */
-        .atomic-close-btn {
+        /* เส้นแสงฟันดาบตรงกลางคำพอดี */
+        .slash-effect {
             position: absolute;
-            top: 25px;
-            right: 30px;
+            top: 50%; left: -20%;
+            width: 140%; height: 8px;
+            margin-top: -4px;
+            background: linear-gradient(90deg, transparent, #ffffff, #e9d5ff, #c084fc, #ffffff, transparent);
+            box-shadow: 0 0 20px #ffffff, 0 0 60px #c084fc, 0 0 100px #a855f7;
+            transform: rotate(-10deg) scaleX(0);
+            transform-origin: left center;
+            opacity: 0;
             z-index: 100;
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 32px;
-            cursor: pointer;
+            pointer-events: none;
         }
 
-        .atomic-close-btn:hover { color: #fff; }
-
-        /* CANVAS */
-        #atomicCanvas{
-            position:absolute;
-            inset:0;
-            width:100%;
-            height:100%;
+        #atomic-overlay.slashing .slash-effect {
+            animation: slashTrigger 0.3s ease-out forwards;
         }
 
-        /* TEXT */
-        .atomic-title{
-            position:relative;
-            z-index:10;
-            text-align:center;
-            pointer-events:none;
+        @keyframes slashTrigger {
+            0% { transform: rotate(-10deg) scaleX(0); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: rotate(-10deg) scaleX(1); opacity: 0; }
         }
 
-        .atomic-small{
-            font-size:14px;
-            letter-spacing:10px;
-            color:#e9c7ff;
-            text-shadow: 0 0 10px #b000ff, 0 0 25px #8a00ff;
-            opacity:0;
+        /* ระเบิดวงกลมคลื่นพลังม่วงนีออนสว่างจ้า */
+        .purple-explosion {
+            position: absolute;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffffff 0%, #d8b4fe 30%, #c084fc 60%, #a855f7 85%, transparent 100%);
+            box-shadow: 0 0 100px #c084fc, 0 0 200px #a855f7, inset 0 0 80px #ffffff;
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
         }
 
-        #atomicOverlay.active .atomic-small {
-            animation: smallIn .5s .15s forwards;
+        #atomic-overlay.slashing .purple-explosion {
+            animation: explodePulse 0.7s cubic-bezier(0.05, 0.7, 0.1, 1) forwards;
         }
 
-        .atomic-word{
-            position:relative;
-            margin-top:15px;
-            font-family:Georgia,serif;
-            font-size: clamp(45px, 9vw, 125px);
-            font-weight:900;
-            letter-spacing:5px;
-            white-space:nowrap;
-            color:white;
-            text-shadow:
-                0 0 5px white,
-                0 0 15px #fff,
-                0 0 35px #d000ff,
-                0 0 70px #9700ff,
-                0 0 130px #6200ff;
-            opacity:0;
+        @keyframes explodePulse {
+            0% { transform: scale(0); opacity: 1; }
+            40% { opacity: 1; }
+            100% { transform: scale(250); opacity: 0; }
         }
 
-        #atomicOverlay.active .atomic-word {
-            animation: atomicAppear .65s .3s both;
+        /* กล่องครอบตัวหนังสือ I AM ATOMIC */
+        .atomic-text-wrapper {
+            position: relative;
+            font-family: 'Cinzel', serif;
+            font-size: 4.8rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 0 20px #c084fc, 0 0 50px #a855f7;
+            z-index: 10;
+            letter-spacing: 4px;
         }
 
-        /* SWORD */
-        .slash{
-            position:absolute;
-            z-index:20;
-            left:-15%;
-            top:50%;
-            width:130%;
-            height:7px;
-            transform: translateY(-50%) rotate(-8deg) scaleX(0);
-            transform-origin:center;
-            background:
-                linear-gradient(
-                    90deg,
-                    transparent 0%,
-                    #ffffff 15%,
-                    #ffffff 48%,
-                    #ffffff 52%,
-                    #d82cff 75%,
-                    transparent 100%
-                );
-            box-shadow:
-                0 0 5px white,
-                0 0 15px white,
-                0 0 30px #d000ff,
-                0 0 60px #9500ff,
-                0 0 100px #7000ff;
+        /* ตัดแบ่งข้อความบน-ล่างให้เนียนตรงกลาง */
+        .atomic-half {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            white-space: nowrap;
+            transition: transform 0.5s cubic-bezier(0.1, 0.8, 0.2, 1);
         }
 
-        #atomicOverlay.active .slash {
-            animation: swordSlash .55s 1.15s cubic-bezier(.15,.8,.2,1) forwards;
+        .atomic-top {
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
         }
 
-        .slash::before{
-            content:"";
-            position:absolute;
-            left:0;
-            top:-20px;
-            width:100%;
-            height:45px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), rgba(190,0,255,.5), transparent);
-            filter:blur(15px);
+        .atomic-bottom {
+            clip-path: polygon(0 50%, 100% 50%, 100% 100%, 0 100%);
         }
 
-        /* EXPLOSION FLASH */
-        #atomicOverlay.explode::after{
-            content:"";
-            position:absolute;
-            inset:0;
-            z-index:30;
-            background:white;
-            opacity:0;
-            pointer-events:none;
-            animation: explosionFlash .55s ease-out;
+        /* เอฟเฟกต์แยกส่วนและกระจัดกระจายตัวอักษร */
+        #atomic-overlay.slashing .atomic-top {
+            transform: translate(-40px, -50px) rotate(-4deg);
+            opacity: 0;
+            filter: blur(10px);
         }
 
-        @keyframes explosionFlash{
-            0%{ opacity:0; }
-            12%{ opacity:.95; }
-            25%{ opacity:.2; }
-            100%{ opacity:0; }
+        #atomic-overlay.slashing .atomic-bottom {
+            transform: translate(40px, 50px) rotate(4deg);
+            opacity: 0;
+            filter: blur(10px);
         }
 
-        /* ANIMATIONS */
-        @keyframes smallIn{
-            from{ opacity:0; transform: translateY(20px); }
-            to{ opacity:1; transform: translateY(0); }
+        /* ชิ้นส่วนกระเด็นกระจายเพิ่มเติม (Letter Shatter Effect) */
+        .shatter-char {
+            display: inline-block;
+            transition: transform 0.6s ease-out, opacity 0.5s ease-out, filter 0.5s ease-out;
         }
 
-        @keyframes atomicAppear{
-            0%{ opacity:0; transform: scale(.3) blur(20px); }
-            70%{ opacity:1; transform: scale(1.08); }
-            100%{ opacity:1; transform: scale(1); }
-        }
-
-        @keyframes swordSlash{
-            0%{ transform: translateY(-50%) rotate(-8deg) scaleX(0); opacity:0; }
-            20%{ opacity:1; }
-            100%{ transform: translateY(-50%) rotate(-8deg) scaleX(1); opacity:1; }
-        }
-
-        .atomic-sub{
-            margin-top:25px;
-            font-size:13px;
-            letter-spacing:8px;
-            color:#d7b8e8;
-            opacity:0;
-        }
-
-        #atomicOverlay.active .atomic-sub {
-            animation: subIn .5s 1.7s forwards;
-        }
-
-        @keyframes subIn{
-            from{ opacity:0; transform: translateY(15px); }
-            to{ opacity:.8; transform: translateY(0); }
-        }
-
-        @media(max-width:600px){
-            .atomic-word{ font-size:42px; letter-spacing:2px; }
-            .atomic-small{ font-size:10px; letter-spacing:5px; }
-        }
+        #atomic-overlay.slashing .shatter-char:nth-child(1) { transform: translate(-120px, -80px) rotate(-45deg) scale(1.3); }
+        #atomic-overlay.slashing .shatter-char:nth-child(2) { transform: translate(-80px, 90px) rotate(35deg) scale(0.8); }
+        #atomic-overlay.slashing .shatter-char:nth-child(3) { transform: translate(-40px, -110px) rotate(-25deg) scale(1.2); }
+        #atomic-overlay.slashing .shatter-char:nth-child(4) { transform: translate(30px, 120px) rotate(50deg) scale(0.7); }
+        #atomic-overlay.slashing .shatter-char:nth-child(5) { transform: translate(90px, -90px) rotate(-60deg) scale(1.4); }
+        #atomic-overlay.slashing .shatter-char:nth-child(6) { transform: translate(140px, 70px) rotate(40deg) scale(0.9); }
     </style>
 </head>
 <body>
 
-    <button class="atomic-trigger-btn" onclick="triggerAtomic()">
-        RELEASE ATOMIC POWER
-    </button>
+    <canvas id="neon-canvas"></canvas>
 
-    <div id="atomicOverlay">
-        <button class="atomic-close-btn" onclick="closeAtomic()">✕</button>
-
-        <canvas id="atomicCanvas"></canvas>
-
-        <div class="atomic-title">
-            <div class="atomic-small">LIMITER RELEASE</div>
-            <div class="atomic-word">I AM ATOMIC</div>
-            <div class="slash"></div>
-            <div class="atomic-sub">POWER RELEASE</div>
+    <div id="atomic-overlay">
+        <div class="purple-explosion"></div>
+        <div class="slash-effect"></div>
+        <div class="atomic-text-wrapper">
+            <div class="atomic-half atomic-top">
+                <span class="shatter-char">I</span> 
+                <span class="shatter-char">AM</span> 
+                <span class="shatter-char">A</span><span class="shatter-char">TO</span><span class="shatter-char">MI</span><span class="shatter-char">C</span>
+            </div>
+            <div class="atomic-half atomic-bottom">
+                <span class="shatter-char">I</span> 
+                <span class="shatter-char">AM</span> 
+                <span class="shatter-char">A</span><span class="shatter-char">TO</span><span class="shatter-char">MI</span><span class="shatter-char">C</span>
+            </div>
+            <span style="visibility: hidden;">I AM ATOMIC</span>
         </div>
     </div>
 
+    <header class="navbar-header">
+        <nav class="navbar">
+            <a href="index.html" class="nav-logo">PORTFOLIO<span>.M3</span></a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link active">หน้าแรก</a></li>
+                <li><a href="profile.html" class="nav-link">ประวัติส่วนตัว</a></li>
+                <li><a href="education.html" class="nav-link">การศึกษา</a></li>
+                <li><a href="hobby.html" class="nav-link">งานอดิเรก</a></li>
+                <li><a href="contact.html" class="nav-link">ติดต่อ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-text">
+                    <div class="badge">I AM ATOMIC — Welcome to my world</div>
+                    <h1 class="hero-title">สวัสดีครับ! ผมชื่อ <span class="gradient-text">ด.ช.สิรวิชญ์ ตระกลบุษบง</span></h1>
+                    <p class="hero-subtitle">นักเรียนชั้นมัธยมศึกษาปีที่ 3/2 โรงเรียนจอมทอง ผู้มีความสนใจในด้านเทคโนโลยี โค้ดดิ้ง และการดีไซน์</p>
+                    <div class="hero-actions">
+                        <a href="profile.html" class="btn btn-primary">รู้จักฉันมากขึ้น</a>
+                        <a href="hobby.html" class="btn btn-secondary">ดูงานอดิเรกของฉัน</a>
+                        <button type="button" id="btn-atomic-power" class="btn btn-atomic">🔮 กดปลดปล่อยพลัง</button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="profile-card-wrapper">
+                        <img src="images/download.jpg" alt="Profile Picture" onerror="this.src='https://via.placeholder.com/320x380/1a0b2e/c084fc?text=Profile+Image'">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-highlights">
+            <div class="highlight-grid">
+                <div class="glass-card stat-card">
+                    <div class="stat-number">3/2</div>
+                    <div class="stat-label">ระดับชั้นปัจจุบัน</div>
+                </div>
+                <div class="glass-card stat-card">
+                    <div class="stat-number">4.00</div>
+                    <div class="stat-label">วิชาคอมพิวเตอร์</div>
+                </div>
+                <div class="glass-card stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">ความมุ่งมั่นในการเรียนรู้</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-info">
+                <a href="index.html" class="nav-logo">PORTFOLIO<span>.M3</span></a>
+                <p>โครงงานวิชาคอมพิวเตอร์ ชั้นมัธยมศึกษาปีที่ 3</p>
+                <p>จัดทำโดย ด.ช.สิรวิชญ์ ตระกลบุษบง ม.3/2</p>
+            </div>
+            <div class="footer-nav">
+                <h4>ลิงก์ด่วน</h4>
+                <ul>
+                    <li><a href="index.html">หน้าแรก</a></li>
+                    <li><a href="profile.html">ประวัติส่วนตัว</a></li>
+                    <li><a href="education.html">การศึกษา</a></li>
+                    <li><a href="hobby.html">งานอดิเรก</a></li>
+                    <li><a href="contact.html">ติดต่อ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Student Portfolio Project. All Rights Reserved.</p>
+        </div>
+    </footer>
+
     <script>
-        const atomicOverlay = document.getElementById("atomicOverlay");
-        const atomicCanvas = document.getElementById("atomicCanvas");
-        const actx = atomicCanvas.getContext("2d");
+        // 1. Neon Background Particles
+        const neonCanvas = document.getElementById('neon-canvas');
+        const neonCtx = neonCanvas.getContext('2d');
+        let bgParticles = [];
 
-        let particles = [];
-        let animationFrame;
-        let startTime;
+        function resizeNeonCanvas() {
+            neonCanvas.width = window.innerWidth;
+            neonCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeNeonCanvas);
+        resizeNeonCanvas();
 
-        function resizeAtomic(){
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            atomicCanvas.width = window.innerWidth * dpr;
-            atomicCanvas.height = window.innerHeight * dpr;
-            atomicCanvas.style.width = window.innerWidth + "px";
-            atomicCanvas.style.height = window.innerHeight + "px";
-            actx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        class BgParticle {
+            constructor() {
+                this.x = Math.random() * neonCanvas.width;
+                this.y = Math.random() * neonCanvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+                this.alpha = Math.random();
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > neonCanvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > neonCanvas.height)this.speedY *= -1;
+            }
+            draw() {
+                neonCtx.save();
+                neonCtx.globalAlpha = this.alpha;
+                neonCtx.beginPath();
+                neonCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                neonCtx.fillStyle = '#c084fc';
+                neonCtx.fill();
+                neonCtx.restore();
+            }
         }
 
-        resizeAtomic();
-        window.addEventListener("resize", resizeAtomic);
+        for (let i = 0; i < 45; i++) bgParticles.push(new BgParticle());
 
-        function createExplosion(){
-            particles = [];
-            const cx = window.innerWidth / 2;
-            const cy = window.innerHeight / 2;
+        function animateBgParticles() {
+            neonCtx.clearRect(0, 0, neonCanvas.width, neonCanvas.height);
+            bgParticles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateBgParticles);
+        }
+        animateBgParticles();
 
-            for(let i = 0; i < 400; i++){
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 16 + 3;
+        // 2. Direct Event Listener & Precise Atomic Syncing
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnAtomic = document.getElementById('btn-atomic-power');
+            const overlay = document.getElementById('atomic-overlay');
 
-                particles.push({
-                    x: cx,
-                    y: cy,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    size: Math.random() * 4 + 1,
-                    life: 1,
-                    decay: 0.008 + Math.random() * 0.018
+            if (btnAtomic && overlay) {
+                btnAtomic.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // รีเซ็ตคลาสเดิม
+                    overlay.classList.remove('active', 'slashing');
+                    
+                    // เปิด Overlay แสดงหน้าจอดำและข้อความ I AM ATOMIC
+                    overlay.classList.add('active');
+
+                    // เล่นไฟล์เสียง
+                    try {
+                        const audio = new Audio('atomic.mp3');
+                        audio.play().catch(function() {});
+                    } catch(err) {}
+
+                    // จังหวะการโดนฟันดาบระเบิด และแตกกระจาย (ปรับเวลา 1.0 วินาที ให้ตรงจังหวะเป๊ะ)
+                    setTimeout(function() {
+                        overlay.classList.add('slashing');
+                    }, 1000);
+
+                    // ปิด Overlay ซ่อนกลับไปหน้าปกติเมื่อจบบรรยากาศระเบิด (2.5 วินาที)
+                    setTimeout(function() {
+                        overlay.classList.remove('active', 'slashing');
+                    }, 2500);
                 });
-            }
-        }
-
-        function drawExplosion(){
-            actx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-            const cx = window.innerWidth / 2;
-            const cy = window.innerHeight / 2;
-
-            const gradient = actx.createRadialGradient(cx, cy, 1, cx, cy, window.innerWidth * 0.65);
-            gradient.addColorStop(0, "rgba(255,255,255,.95)");
-            gradient.addColorStop(0.04, "rgba(235,100,255,.9)");
-            gradient.addColorStop(0.15, "rgba(190,0,255,.55)");
-            gradient.addColorStop(0.4, "rgba(100,0,255,.2)");
-            gradient.addColorStop(1, "rgba(0,0,0,0)");
-
-            actx.fillStyle = gradient;
-            actx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-
-            const elapsed = performance.now() - startTime;
-
-            for(let i = 0; i < 5; i++){
-                const radius = elapsed * 0.7 + i * 30;
-                actx.beginPath();
-                actx.arc(cx, cy, radius, 0, Math.PI * 2);
-                actx.strokeStyle = `rgba(205, 70, 255, ${Math.max(0, 0.5 - radius / window.innerWidth)})`;
-                actx.lineWidth = 3;
-                actx.shadowBlur = 25;
-                actx.shadowColor = "#a000ff";
-                actx.stroke();
-            }
-
-            particles.forEach(p => {
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vx *= 0.985;
-                p.vy *= 0.985;
-                p.life -= p.decay;
-
-                if(p.life > 0){
-                    actx.beginPath();
-                    actx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
-                    actx.fillStyle = `rgba(240, 180, 255, ${p.life})`;
-                    actx.shadowBlur = 20;
-                    actx.shadowColor = "#c000ff";
-                    actx.fill();
-                }
-            });
-
-            animationFrame = requestAnimationFrame(drawExplosion);
-        }
-
-        function triggerAtomic(){
-            atomicOverlay.classList.remove("active", "explode");
-            void atomicOverlay.offsetWidth;
-
-            atomicOverlay.classList.add("active");
-            document.body.style.overflow = "hidden";
-
-            resizeAtomic();
-            startTime = performance.now();
-            createExplosion();
-
-            cancelAnimationFrame(animationFrame);
-            animationFrame = requestAnimationFrame(drawExplosion);
-
-            setTimeout(() => {
-                atomicOverlay.classList.add("explode");
-            }, 1700);
-
-            setTimeout(() => {
-                closeAtomic();
-            }, 5500);
-        }
-
-        function closeAtomic(){
-            atomicOverlay.classList.remove("active", "explode");
-            document.body.style.overflow = "";
-            cancelAnimationFrame(animationFrame);
-            actx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-        }
-
-        document.addEventListener("keydown", e => {
-            if(e.key === "Escape"){
-                closeAtomic();
             }
         });
     </script>
