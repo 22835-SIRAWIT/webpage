@@ -339,8 +339,9 @@
             opacity: 0;
         }
 
+        /* ปรับดีเลย์อนิเมชันให้ตรงกับบทพูดระเบิดพลัง */
         #atomic-overlay.active .atomic-blast {
-            animation: blastAnim 2.5s forwards 1.2s;
+            animation: blastAnim 2.5s forwards 3.5s;
         }
 
         @keyframes blastAnim {
@@ -436,8 +437,8 @@
 
     <!-- ระบบเล่นเอฟเฟกต์ภาพและเสียงพร้อมกัน -->
     <script>
-        // ดึงไฟล์เสียง atomic.mp3
-        const atomicAudio = new Audio('atomic.mp3');
+        // เปลี่ยนมาใช้ไฟล์เสียงที่คุณแนบไว้
+        const atomicAudio = new Audio('Y2Mate.is - I AM ATOMIC  _ The eminence in shadow anime theeminenceinshadow animeedit.mp3');
 
         function triggerAtomic() {
             const overlay = document.getElementById('atomic-overlay');
@@ -446,13 +447,13 @@
             // รีเซ็ตเวลาและสั่งเล่นเสียงทันที
             atomicAudio.currentTime = 0;
             atomicAudio.play().catch(err => {
-                console.log("กรุณาโหลดไฟล์ atomic.mp3 ไว้ในโฟลเดอร์เดียวกับ HTML");
+                console.log("โปรดแนบไฟล์เสียงไว้ในโฟลเดอร์เดียวกับไฟล์ HTML");
             });
 
-            // ปิดเอฟเฟกต์เมื่อเล่นจบ (4 วินาที)
+            // ปิดเอฟเฟกต์เมื่อเพลงเล่นจบ (ประมาณ 6 วินาที)
             setTimeout(() => {
                 overlay.classList.remove('active');
-            }, 4000);
+            }, 6000);
         }
 
         // ดักจับการกดปุ่ม F5 บนคีย์บอร์ด
