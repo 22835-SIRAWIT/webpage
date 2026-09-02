@@ -434,52 +434,34 @@
         </div>
     </footer>
 
-    <!-- Script สำหรับเล่นเอฟเฟกต์ -->
+    <!-- ระบบเล่นเอฟเฟกต์ภาพและเสียงพร้อมกัน -->
     <script>
+        // ดึงไฟล์เสียง atomic.mp3
+        const atomicAudio = new Audio('atomic.mp3');
+
         function triggerAtomic() {
             const overlay = document.getElementById('atomic-overlay');
             overlay.classList.add('active');
 
-            // ซาวด์เอฟเฟกต์การระเบิดด้วย Web Audio API (ไม่ต้องใช้นำเข้าไฟล์เสียงภายนอก)
-            playAtomicSound();
+            // รีเซ็ตเวลาและสั่งเล่นเสียงทันที
+            atomicAudio.currentTime = 0;
+            atomicAudio.play().catch(err => {
+                console.log("กรุณาโหลดไฟล์ atomic.mp3 ไว้ในโฟลเดอร์เดียวกับ HTML");
+            });
 
-            // หลังจากแสดงผล 3.5 วินาที ให้ปิดเอฟเฟกต์ลง
+            // ปิดเอฟเฟกต์เมื่อเล่นจบ (4 วินาที)
             setTimeout(() => {
                 overlay.classList.remove('active');
-            }, 3500);
+            }, 4000);
         }
 
-        // จับเหตุการณ์การกดปุ่ม F5
+        // ดักจับการกดปุ่ม F5 บนคีย์บอร์ด
         window.addEventListener('keydown', function(e) {
             if (e.key === 'F5') {
-                e.preventDefault(); // ป้องกันไม่ให้เบราว์เซอร์รีเฟรชหน้าเว็บแบบปกติ
+                e.preventDefault(); // ป้องกันเบราว์เซอร์รีเฟรช
                 triggerAtomic();
             }
         });
-
-        // ฟังก์ชันสร้างเสียงระเบิดพลังม่วง
-        function playAtomicSound() {
-            try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(30, ctx.currentTime + 3);
-
-                gain.gain.setValueAtTime(0.5, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 3);
-
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                osc.start();
-                osc.stop(ctx.currentTime + 3);
-            } catch(e) {
-                console.log("Audio not supported");
-            }
-        }
     </script>
 </body>
 </html>
