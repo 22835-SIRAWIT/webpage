@@ -204,13 +204,13 @@
         .footer-bottom { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-muted); font-size: 0.85rem; }
 
         /* ==========================================
-           ATOMIC OVERLAY - CUT & LETTER SHATTER ONLY
+           ATOMIC OVERLAY & TIMED TEXT EFFECT
            ========================================== */
         #atomic-overlay {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            background: rgba(3, 1, 8, 0.97);
+            background: rgba(2, 0, 5, 0.98);
             z-index: 999999;
             display: none;
             justify-content: center;
@@ -224,14 +224,14 @@
             pointer-events: auto;
         }
 
-        /* เส้นแสงฟันดาบตัดผ่านตรงกลาง */
+        /* เส้นแสงฟันดาบ */
         .slash-effect {
             position: absolute;
             top: 50%; left: -20%;
-            width: 140%; height: 6px;
-            margin-top: -3px;
-            background: linear-gradient(90deg, transparent, #ffffff, #e9d5ff, #c084fc, #ffffff, transparent);
-            box-shadow: 0 0 15px #ffffff, 0 0 40px #c084fc, 0 0 80px #a855f7;
+            width: 140%; height: 8px;
+            margin-top: -4px;
+            background: linear-gradient(90deg, transparent, #ffffff, #c084fc, #ffffff, transparent);
+            box-shadow: 0 0 20px #ffffff, 0 0 50px #c084fc, 0 0 100px #a855f7;
             transform: rotate(-12deg) scaleX(0);
             transform-origin: left center;
             opacity: 0;
@@ -240,7 +240,7 @@
         }
 
         #atomic-overlay.slashing .slash-effect {
-            animation: slashTrigger 0.35s ease-out forwards;
+            animation: slashTrigger 0.3s ease-out forwards;
         }
 
         @keyframes slashTrigger {
@@ -249,73 +249,56 @@
             100% { transform: rotate(-12deg) scaleX(1); opacity: 0; }
         }
 
-        /* กล่องครอบตัวหนังสือ I AM ATOMIC */
         .atomic-text-wrapper {
             position: relative;
             font-family: 'Cinzel', serif;
-            font-size: 5rem;
+            font-size: 4.8rem;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 0 0 20px #c084fc, 0 0 50px #a855f7;
             z-index: 10;
-            letter-spacing: 6px;
+            letter-spacing: 12px;
             display: flex;
-            gap: 0.8rem;
+            gap: 1.5rem;
         }
 
-        /* แต่ละตัวอักษรตั้งค่ารองรับการหมุนและการเปลี่ยนตำแหน่งแบบ 3D */
+        .word-group {
+            display: flex;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out, filter 0.4s ease-out;
+            filter: blur(8px);
+        }
+
+        /* คลาสสั่งเรืองแสงเมื่อคำนั้นๆ แสดงผล */
+        .word-group.show {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0px);
+            text-shadow: 0 0 20px #c084fc, 0 0 40px #a855f7;
+        }
+
+        /* ตัวอักษรแต่ละตัวสำหรับการกระจัดกระจาย */
         .shatter-char {
             display: inline-block;
             transition: transform 0.8s cubic-bezier(0.1, 0.8, 0.2, 1), opacity 0.7s ease-out, filter 0.7s ease-out;
-            transform-origin: center center;
         }
 
-        /* กำหนดทิศทางการกระจัดกระจายและปลิวหายของแต่ละตัวอักษรเมื่อโดนฟัน */
-        #atomic-overlay.slashing .shatter-char:nth-child(1) { /* I */
-            transform: translate3d(-280px, -200px, 0) rotate(-120deg) scale(0.4);
-            opacity: 0;
-            filter: blur(12px);
-        }
-        #atomic-overlay.slashing .shatter-char:nth-child(2) { /* A */
-            transform: translate3d(-180px, 220px, 0) rotate(140deg) scale(0.6);
-            opacity: 0;
-            filter: blur(10px);
-        }
-        #atomic-overlay.slashing .shatter-char:nth-child(3) { /* M */
-            transform: translate3d(-120px, -280px, 0) rotate(-90deg) scale(0.5);
-            opacity: 0;
-            filter: blur(12px);
-        }
-        #atomic-overlay.slashing .shatter-char:nth-child(4) { /* A */
-            transform: translate3d(-40px, 300px, 0) rotate(180deg) scale(0.3);
-            opacity: 0;
-            filter: blur(8px);
-        }
-        #atomic-overlay.slashing .shatter-char:nth-child(5) { /* T */
-            transform: translate3d(50px, -320px, 0) rotate(-210deg) scale(0.7);
+        /* ทิศทางการปลิวหายของแต่ละกลุ่มคำตอนโดนฟัน */
+        #atomic-overlay.slashing .word-i .shatter-char {
+            transform: translate3d(-300px, -200px, 0) rotate(-140deg) scale(0.3);
             opacity: 0;
             filter: blur(15px);
         }
-        #atomic-overlay.slashing .shatter-char:nth-child(6) { /* O */
-            transform: translate3d(130px, 260px, 0) rotate(150deg) scale(0.4);
-            opacity: 0;
-            filter: blur(10px);
-        }
-        #atomic-overlay.slashing .shatter-char:nth-child(7) { /* M */
-            transform: translate3d(210px, -240px, 0) rotate(-160deg) scale(0.6);
-            opacity: 0;
-            filter: blur(12px);
-        }
-        #atomic-overlay.slashing .shatter-char:nth-child(8) { /* I */
-            transform: translate3d(290px, 180px, 0) rotate(110deg) scale(0.5);
-            opacity: 0;
-            filter: blur(10px);
-        }
-        #atomic-overlay.slashing .shatter-char:nth-child(9) { /* C */
-            transform: translate3d(360px, -180px, 0) rotate(-240deg) scale(0.3);
-            opacity: 0;
-            filter: blur(15px);
-        }
+
+        #atomic-overlay.slashing .word-am .shatter-char:nth-child(1) { transform: translate3d(-150px, 250px, 0) rotate(120deg) scale(0.4); opacity: 0; filter: blur(12px); }
+        #atomic-overlay.slashing .word-am .shatter-char:nth-child(2) { transform: translate3d(-80px, -300px, 0) rotate(-100deg) scale(0.5); opacity: 0; filter: blur(12px); }
+
+        #atomic-overlay.slashing .word-atomic .shatter-char:nth-child(1) { transform: translate3d(20px, 320px, 0) rotate(180deg) scale(0.3); opacity: 0; filter: blur(10px); }
+        #atomic-overlay.slashing .word-atomic .shatter-char:nth-child(2) { transform: translate3d(100px, -350px, 0) rotate(-200deg) scale(0.6); opacity: 0; filter: blur(15px); }
+        #atomic-overlay.slashing .word-atomic .shatter-char:nth-child(3) { transform: translate3d(180px, 280px, 0) rotate(140deg) scale(0.4); opacity: 0; filter: blur(12px); }
+        #atomic-overlay.slashing .word-atomic .shatter-char:nth-child(4) { transform: translate3d(250px, -260px, 0) rotate(-160deg) scale(0.5); opacity: 0; filter: blur(12px); }
+        #atomic-overlay.slashing .word-atomic .shatter-char:nth-child(5) { transform: translate3d(320px, 220px, 0) rotate(120deg) scale(0.4); opacity: 0; filter: blur(10px); }
+        #atomic-overlay.slashing .word-atomic .shatter-char:nth-child(6) { transform: translate3d(400px, -180px, 0) rotate(-220deg) scale(0.2); opacity: 0; filter: blur(15px); }
     </style>
 </head>
 <body>
@@ -325,15 +308,15 @@
     <div id="atomic-overlay">
         <div class="slash-effect"></div>
         <div class="atomic-text-wrapper">
-            <span class="shatter-char">I</span>
-            <span class="shatter-char">A</span>
-            <span class="shatter-char">M</span>
-            <span class="shatter-char">A</span>
-            <span class="shatter-char">T</span>
-            <span class="shatter-char">O</span>
-            <span class="shatter-char">M</span>
-            <span class="shatter-char">I</span>
-            <span class="shatter-char">C</span>
+            <div class="word-group word-i" id="w-i">
+                <span class="shatter-char">I</span>
+            </div>
+            <div class="word-group word-am" id="w-am">
+                <span class="shatter-char">A</span><span class="shatter-char">M</span>
+            </div>
+            <div class="word-group word-atomic" id="w-atomic">
+                <span class="shatter-char">A</span><span class="shatter-char">T</span><span class="shatter-char">O</span><span class="shatter-char">M</span><span class="shatter-char">I</span><span class="shatter-char">C</span>
+            </div>
         </div>
     </div>
 
@@ -460,36 +443,56 @@
         }
         animateBgParticles();
 
-        // 2. Direct Event Listener & Precise Atomic Syncing
+        // 2. Exact Sound Syncing Script
         document.addEventListener('DOMContentLoaded', function() {
             const btnAtomic = document.getElementById('btn-atomic-power');
             const overlay = document.getElementById('atomic-overlay');
+            const wordI = document.getElementById('w-i');
+            const wordAm = document.getElementById('w-am');
+            const wordAtomic = document.getElementById('w-atomic');
 
             if (btnAtomic && overlay) {
                 btnAtomic.addEventListener('click', function(e) {
                     e.preventDefault();
                     
-                    // รีเซ็ตคลาสเดิม
+                    // ลบทุก Class และการตั้งค่าเดิมออก
                     overlay.classList.remove('active', 'slashing');
+                    wordI.classList.remove('show');
+                    wordAm.classList.remove('show');
+                    wordAtomic.classList.remove('show');
                     
-                    // เปิด Overlay แสดงหน้าจอดำและข้อความ I AM ATOMIC
+                    // เปิดหน้าจอดำ Overlay
                     overlay.classList.add('active');
 
-                    // เล่นไฟล์เสียง
-                    try {
-                        const audio = new Audio('atomic.mp3');
-                        audio.play().catch(function() {});
-                    } catch(err) {}
+                    // โหลดและเล่นไฟล์เสียง atomic.mp3
+                    const sound = new Audio('atomic.mp3');
+                    sound.volume = 0.9;
+                    sound.play().catch(function() {});
 
-                    // จังหวะดาบฟันตัดผ่านและข้อความกระจายตัวออก
-                    setTimeout(function() {
-                        overlay.classList.add('slashing');
+                    // 1. จังหวะพูดคำว่า "I" (ประมาณวินาทีที่ 1.0)
+                    setTimeout(() => {
+                        wordI.classList.add('show');
                     }, 1000);
 
-                    // ปิด Overlay กลับสู่หน้าปกติ
-                    setTimeout(function() {
+                    // 2. จังหวะพูดคำว่า "AM" (ประมาณวินาทีที่ 1.8)
+                    setTimeout(() => {
+                        wordAm.classList.add('show');
+                    }, 1800);
+
+                    // 3. จังหวะพูดคำว่า "ATOMIC" (ประมาณวินาทีที่ 2.8)
+                    setTimeout(() => {
+                        wordAtomic.classList.add('show');
+                    }, 2800);
+
+                    // 4. จังหวะเสียงฟัน / ตู้ม (ประมาณวินาทีที่ 3.3) -> ฟันและแตกกระจาย
+                    setTimeout(() => {
+                        overlay.classList.add('slashing');
+                    }, 3300);
+
+                    // 5. ปิด Overlay กลับสู่หน้าปกติ (ประมาณวินาทีที่ 4.5)
+                    setTimeout(() => {
                         overlay.classList.remove('active', 'slashing');
-                    }, 2400);
+                    }, 4500);
                 });
             }
         });
