@@ -451,7 +451,7 @@
                 this.x += this.speedX;
                 this.y += this.speedY;
                 if (this.x < 0 || this.x > neonCanvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > neonCanvas.height)this.speedY *= -1;
+                if (this.y < 0 || this.y > neonCanvas.height) this.speedY *= -1;
             }
             draw() {
                 neonCtx.save();
@@ -494,7 +494,7 @@
                         audio.play().catch(function() {});
                     } catch(err) {}
 
-                    // จังหวะการโดนฟันดาบระเบิด และแตกกระจาย (ปรับเวลา 1.0 วินาที ให้ตรงจังหวะเป๊ะ)
+                    // จังหวะการโดนฟันดาบระเบิด และแตกกระจาย (ปรับเวลา 1.0 วินาที ให้ตรงจังหวะ)
                     setTimeout(function() {
                         overlay.classList.add('slashing');
                     }, 1000);
