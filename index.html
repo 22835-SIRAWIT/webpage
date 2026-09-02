@@ -464,10 +464,13 @@
                     // เปิดหน้าจอดำ Overlay
                     overlay.classList.add('active');
 
-                    // โหลดและเล่นไฟล์เสียง atomic.mp3
+                    // โหลดและตั้งค่าเสียงเป็น 100% (1.0)
                     const sound = new Audio('atomic.mp3');
-                    sound.volume = 0.9;
-                    sound.play().catch(function() {});
+                    sound.volume = 1.0; 
+                    sound.currentTime = 0; 
+                    sound.play().catch(function(error) {
+                        console.warn("ไม่สามารถเล่นเสียงได้:", error);
+                    });
 
                     // 1. จังหวะพูดคำว่า "I" (ประมาณวินาทีที่ 1.0)
                     setTimeout(() => {
