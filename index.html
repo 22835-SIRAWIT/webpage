@@ -109,7 +109,7 @@
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link:hover, .nav-link.active { color: #fff; text-shadow: 0 0 12px var(--purple-neon); }
 
-        /* Main Body Content */
+        /* Main Content */
         .main-content { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
         .hero-section { padding: 3rem 0; }
         .hero-container {
@@ -161,6 +161,7 @@
             background: #000; color: #c084fc; border: 2px solid #c084fc;
             box-shadow: 0 0 15px #c084fc, inset 0 0 10px rgba(192, 132, 252, 0.3);
             position: relative; overflow: hidden;
+            user-select: none;
         }
         .btn-atomic:hover {
             background: #c084fc; color: #000;
@@ -215,10 +216,12 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            pointer-events: none;
         }
 
         #atomic-overlay.active {
             display: flex;
+            pointer-events: auto;
         }
 
         /* รอยดาบฟันเฉือน */
@@ -245,7 +248,7 @@
             100% { transform: rotate(-15deg) scaleX(1); opacity: 0; }
         }
 
-        /* เอฟเฟกต์ระเบิดวงกลมคลื่นพลังม่วงนีออน */
+        /* ระเบิดคลื่นพลังม่วงนีออน */
         .purple-explosion {
             position: absolute;
             width: 10px; height: 10px;
@@ -268,7 +271,7 @@
             100% { transform: scale(300); opacity: 0; }
         }
 
-        /* กล่องข้อความแยก 2 ส่วนสำหรับรอยตัดแบบสมจริง */
+        /* ข้อความ I AM ATOMIC */
         .atomic-text-wrapper {
             position: relative;
             font-family: 'Cinzel', serif;
@@ -287,17 +290,14 @@
             transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
 
-        /* ครึ่งบนของข้อความ */
         .atomic-top {
             clip-path: polygon(0 0, 100% 0, 100% 48%, 0 62%);
         }
 
-        /* ครึ่งล่างของข้อความ */
         .atomic-bottom {
             clip-path: polygon(0 62%, 100% 48%, 100% 100%, 0 100%);
         }
 
-        /* เมื่อโดนตัด ให้แยกออกจากกันคนละทิศทาง */
         #atomic-overlay.slashing .atomic-top {
             transform: translate(-30px, -40px) rotate(-3deg);
             opacity: 0;
@@ -348,7 +348,7 @@
                     <div class="hero-actions">
                         <a href="profile.html" class="btn btn-primary">รู้จักฉันมากขึ้น</a>
                         <a href="hobby.html" class="btn btn-secondary">ดูงานอดิเรกของฉัน</a>
-                        <button type="button" onclick="triggerAtomic()" class="btn btn-atomic">🔮 กดปลดปล่อยพลัง</button>
+                        <button type="button" id="btn-atomic-power" class="btn btn-atomic">🔮 กดปลดปล่อยพลัง</button>
                     </div>
                 </div>
                 <div class="hero-visual">
@@ -448,30 +448,27 @@
         }
         animateBgParticles();
 
-        // 2. Trigger Atomic Action
-        function triggerAtomic() {
+        // 2. Direct Event Listener for Atomic Button (100% Reliable)
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnAtomic = document.getElementById('btn-atomic-power');
             const overlay = document.getElementById('atomic-overlay');
-            
-            // ลบคลาสเดิมเตรียมรันรอบใหม่
-            overlay.classList.remove('active', 'slashing');
-            
-            // สั่งเริ่มทำงาน
-            setTimeout(() => {
-                overlay.classList.add('active');
-            }, 10);
 
-            // เล่นเสียงเอฟเฟกต์
-            try {
-                const audio = new Audio('atomic.mp3');
-                audio.play().catch(err => console.log('Audio muted or blocked.'));
-            } catch (e) {}
+            if (btnAtomic && overlay) {
+                btnAtomic.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // รีเซ็ตสถานะ
+                    overlay.classList.remove('active', 'slashing');
+                    
+                    // แสดง Overlay หน้าจอดำ
+                    overlay.classList.add('active');
 
-            // สั่งฟันดาบระเบิดนีออน (1.1 วินาที)
-            setTimeout(() => {
-                overlay.classList.add('slashing');
-            }, 1100);
+                    // เล่นเสียง
+                    try {
+                        const audio = new Audio('atomic.mp3');
+                        audio.play().catch(function() {});
+                    } catch(err) {}
 
-            // ปิด Overlay เมื่องานเสร็จสิ้น (2.6 วินาที)
-            setTimeout(() => {
-                overlay.classList.remove('active', 'slashing');
-            }, 26
+                    // ฟันดาบระเบิดนีออน (1.1 วินาที)
+                    setTimeout(function() {
+                  
