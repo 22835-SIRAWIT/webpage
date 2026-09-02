@@ -28,8 +28,31 @@
             line-height: 1.6;
             min-height: 100vh;
             background-color: #05020a;
+            background-image: linear-gradient(rgba(5, 2, 10, 0.8), rgba(5, 2, 10, 0.9)), url('images/shadow-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             overflow-x: hidden;
             position: relative;
+        }
+
+        /* Ambient Background Glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -20%; left: -20%;
+            width: 140%; height: 140%;
+            background: radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(192, 132, 252, 0.12) 0%, transparent 50%);
+            z-index: -2;
+            pointer-events: none;
+            animation: pulseGlow 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+            100% { transform: scale(1.1) rotate(3deg); opacity: 1; }
         }
 
         #neon-canvas {
@@ -42,81 +65,192 @@
 
         a { text-decoration: none; transition: all 0.3s ease; }
 
+        /* Navigation Header */
         .navbar-header {
             background: rgba(10, 4, 18, 0.85);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-purple);
-            position: sticky; top: 0; z-index: 1000;
+            position: sticky; top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 25px rgba(168, 85, 247, 0.2);
         }
 
         .navbar {
-            display: flex; justify-content: space-between; align-items: center;
-            max-width: 1200px; margin: 0 auto; padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
         }
 
-        .nav-logo { font-size: 1.6rem; font-weight: 700; color: #fff; }
-        .nav-logo span { color: var(--purple-neon); }
+        .nav-logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-logo span {
+            color: var(--purple-neon);
+            text-shadow: 0 0 15px var(--purple-neon), 0 0 30px var(--purple-intense);
+        }
 
         .nav-menu { list-style: none; display: flex; gap: 2rem; }
-        .nav-link { color: var(--text-muted); }
-        .nav-link.active, .nav-link:hover { color: #fff; }
+        .nav-link { color: var(--text-muted); font-weight: 400; position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 0%; height: 2px;
+            background: var(--purple-neon);
+            box-shadow: 0 0 10px var(--purple-neon);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link:hover, .nav-link.active { color: #fff; text-shadow: 0 0 12px var(--purple-neon); }
 
+        /* Main Body Content */
         .main-content { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+        .hero-section { padding: 3rem 0; }
         .hero-container {
             display: flex; align-items: center; justify-content: space-between; gap: 3rem;
             background: var(--bg-card); padding: 3rem; border-radius: 24px;
-            border: 1px solid var(--border-purple); backdrop-filter: blur(16px);
+            border: 1px solid var(--border-purple);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.2), inset 0 0 15px rgba(192, 132, 252, 0.1);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .hero-container:hover {
+            border-color: var(--purple-neon);
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.35), inset 0 0 25px rgba(192, 132, 252, 0.15);
         }
 
         .hero-text { flex: 1.2; }
         .badge {
-            display: inline-block; background: rgba(192, 132, 252, 0.12);
-            border: 1px solid var(--purple-neon); color: var(--purple-bright);
-            padding: 0.4rem 1.2rem; border-radius: 50px; font-size: 0.85rem; margin-bottom: 1.5rem;
+            display: inline-block;
+            background: rgba(192, 132, 252, 0.12);
+            border: 1px solid var(--purple-neon);
+            color: var(--purple-bright);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem; font-weight: 500; margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px var(--purple-glow);
+            animation: badgeGlow 2s ease-in-out infinite alternate;
+        }
+        @keyframes badgeGlow {
+            from { box-shadow: 0 0 10px var(--purple-glow); }
+            to { box-shadow: 0 0 22px var(--purple-neon); }
         }
 
-        .hero-title { font-size: 2.6rem; font-weight: 700; margin-bottom: 1.2rem; }
+        .hero-title { font-size: 2.6rem; font-weight: 700; line-height: 1.3; margin-bottom: 1.2rem; }
         .gradient-text {
-            background: linear-gradient(135deg, #ffffff 0%, #c084fc 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 40%, #c084fc 80%, #a855f7 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(192, 132, 252, 0.4);
+        }
+        .hero-subtitle { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 2.5rem; }
+        .hero-actions { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+
+        .btn { padding: 0.8rem 1.8rem; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; }
+        .btn-primary { background: linear-gradient(135deg, #a855f7, #6b21a8); color: #fff; box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); border: none; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 35px rgba(168, 85, 247, 0.9), 0 0 10px #fff; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid var(--border-purple); backdrop-filter: blur(8px); }
+        .btn-secondary:hover { background: rgba(192, 132, 252, 0.2); border-color: var(--purple-neon); box-shadow: 0 0 20px var(--purple-glow); transform: translateY(-3px); }
+
+        .btn-atomic {
+            background: #000; color: #c084fc; border: 2px solid #c084fc;
+            box-shadow: 0 0 15px #c084fc, inset 0 0 10px rgba(192, 132, 252, 0.3);
+            position: relative; overflow: hidden;
+        }
+        .btn-atomic:hover {
+            background: #c084fc; color: #000;
+            box-shadow: 0 0 40px #c084fc, 0 0 80px rgba(192, 132, 252, 0.6);
+            transform: scale(1.05); font-weight: 700;
         }
 
-        .hero-actions { display: flex; gap: 1.2rem; flex-wrap: wrap; margin-top: 1.5rem; }
-        .btn { padding: 0.8rem 1.8rem; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-        .btn-primary { background: var(--purple-intense); color: #fff; border: none; }
-        .btn-secondary { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid var(--border-purple); }
-        .btn-atomic { background: #000; color: #c084fc; border: 2px solid #c084fc; box-shadow: 0 0 15px #c084fc; }
-
-        .hero-visual { flex: 0.8; display: flex; justify-content: center; }
+        .hero-visual { flex: 0.8; display: flex; justify-content: center; position: relative; }
         .profile-card-wrapper {
-            width: 280px; height: 350px; border-radius: 20px;
-            border: 2px solid var(--purple-neon); background: #1a0b2e;
-            display: flex; align-items: center; justify-content: center; color: var(--text-muted);
+            position: relative; z-index: 2; border-radius: 20px; overflow: hidden;
+            border: 2px solid var(--purple-neon);
+            box-shadow: 0 0 35px var(--purple-glow), 0 0 70px rgba(168, 85, 247, 0.3);
+            transition: all 0.4s ease;
         }
+        .profile-card-wrapper:hover { transform: scale(1.03) rotate(1deg); box-shadow: 0 0 50px var(--purple-neon), 0 0 90px var(--purple-intense); }
+        .profile-card-wrapper img { width: 100%; max-width: 320px; height: auto; display: block; object-fit: cover; }
 
-        /* Overlay System */
+        .quick-highlights { margin-top: 3rem; }
+        .highlight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .glass-card {
+            background: var(--bg-card); border: 1px solid var(--border-purple);
+            border-radius: 20px; padding: 2rem; text-align: center; backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); transition: all 0.4s ease;
+        }
+        .glass-card:hover { transform: translateY(-8px); border-color: var(--purple-neon); box-shadow: 0 0 35px var(--purple-glow), inset 0 0 15px rgba(192, 132, 252, 0.2); }
+        .stat-number { font-size: 2.8rem; font-weight: 700; color: var(--purple-bright); text-shadow: 0 0 20px var(--purple-glow), 0 0 40px var(--purple-intense); }
+        .stat-label { color: var(--text-muted); }
+
+        .site-footer {
+            background: rgba(8, 3, 15, 0.95); border-top: 1px solid var(--border-purple);
+            padding: 3rem 0 1.5rem; margin-top: 5rem; backdrop-filter: blur(10px);
+            box-shadow: 0 -10px 30px rgba(168, 85, 247, 0.1);
+        }
+        .footer-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; }
+        .footer-info p, .footer-nav ul li a { color: var(--text-muted); font-size: 0.9rem; }
+        .footer-nav h4 { color: #fff; margin-bottom: 0.8rem; text-shadow: 0 0 8px var(--purple-neon); }
+        .footer-nav ul { list-style: none; }
+        .footer-nav ul li { margin-bottom: 0.4rem; }
+        .footer-nav ul li a:hover { color: var(--purple-bright); text-shadow: 0 0 10px var(--purple-neon); }
+        .footer-bottom { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-muted); font-size: 0.85rem; }
+
+        /* ========================================================
+           --- ATOMIC OVERLAY & SWORD SLASH ---
+           ======================================================== */
         #atomic-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.95); z-index: 99999; display: none;
-            justify-content: center; align-items: center;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 99999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
-        #atomic-overlay.active { display: flex; }
 
+        #atomic-overlay.active {
+            display: flex;
+        }
+
+        /* รอยฟันดาบม่วงนีออน */
         .slash-line {
-            position: absolute; top: 50%; left: -20%; width: 140%; height: 8px;
-            background: linear-gradient(90deg, transparent 0%, #fff 50%, #c084fc 100%);
-            transform: rotate(-15deg) scaleX(0); transform-origin: left center;
-            z-index: 100; pointer-events: none;
-        }
-        #atomic-overlay.slashing .slash-line {
-            animation: slashAnim 0.25s forwards;
-        }
-        @keyframes slashAnim {
-            0% { transform: rotate(-15deg) scaleX(0); opacity: 1; }
-            100% { transform: rotate(-15deg) scaleX(1); opacity: 0; }
+            position: absolute;
+            top: 50%; left: -20%;
+            width: 140%; height: 10px;
+            background: linear-gradient(90deg, transparent 0%, #ffffff 40%, #c084fc 70%, transparent 100%);
+            box-shadow: 0 0 30px #ffffff, 0 0 60px #c084fc, 0 0 100px #a855f7;
+            transform: rotate(-20deg) scaleX(0);
+            transform-origin: left center;
+            opacity: 0;
+            z-index: 100;
+            pointer-events: none;
         }
 
-        #atomic-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        #atomic-overlay.slashing .slash-line {
+            animation: slashAnim 0.22s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+        }
+
+        @keyframes slashAnim {
+            0% { transform: rotate(-20deg) scaleX(0); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: rotate(-20deg) scaleX(1); opacity: 0; }
+        }
+
+        #atomic-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -130,142 +264,206 @@
 
     <header class="navbar-header">
         <nav class="navbar">
-            <a href="#" class="nav-logo">PORTFOLIO<span>.M3</span></a>
+            <a href="index.html" class="nav-logo">PORTFOLIO<span>.M3</span></a>
             <ul class="nav-menu">
-                <li><a href="#" class="nav-link active">หน้าแรก</a></li>
-                <li><a href="#" class="nav-link">ประวัติส่วนตัว</a></li>
-                <li><a href="#" class="nav-link">ติดต่อ</a></li>
+                <li><a href="index.html" class="nav-link active">หน้าแรก</a></li>
+                <li><a href="profile.html" class="nav-link">ประวัติส่วนตัว</a></li>
+                <li><a href="education.html" class="nav-link">การศึกษา</a></li>
+                <li><a href="hobby.html" class="nav-link">งานอดิเรก</a></li>
+                <li><a href="contact.html" class="nav-link">ติดต่อ</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="main-content">
-        <section class="hero-container">
-            <div class="hero-text">
-                <div class="badge">I AM ATOMIC</div>
-                <h1 class="hero-title">สวัสดีครับ! <span class="gradient-text">สิรวิชญ์ ตระกลบุษบง</span></h1>
-                <p>นักเรียนชั้นมัธยมศึกษาปีที่ 3/2 โรงเรียนจอมทอง</p>
-                <div class="hero-actions">
-                    <button onclick="triggerAtomic()" class="btn btn-atomic">🔮 กดปลดปล่อยพลัง</button>
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-text">
+                    <div class="badge">I AM ATOMIC — Welcome to my world</div>
+                    <h1 class="hero-title">สวัสดีครับ! ผมชื่อ <span class="gradient-text">ด.ช.สิรวิชญ์ ตระกลบุษบง</span></h1>
+                    <p class="hero-subtitle">นักเรียนชั้นมัธยมศึกษาปีที่ 3/2 โรงเรียนจอมทอง ผู้มีความสนใจในด้านเทคโนโลยี โค้ดดิ้ง และการดีไซน์</p>
+                    <div class="hero-actions">
+                        <a href="profile.html" class="btn btn-primary">รู้จักฉันมากขึ้น</a>
+                        <a href="hobby.html" class="btn btn-secondary">ดูงานอดิเรกของฉัน</a>
+                        <button onclick="triggerAtomic()" class="btn btn-atomic">🔮 กดปลดปล่อยพลัง</button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="profile-card-wrapper">
+                        <img src="images/download.jpg" alt="Profile Picture">
+                    </div>
                 </div>
             </div>
-            <div class="hero-visual">
-                <div class="profile-card-wrapper">
-                    <span>[ รูปโปรไฟล์ ]</span>
+        </section>
+
+        <section class="quick-highlights">
+            <div class="highlight-grid">
+                <div class="glass-card stat-card">
+                    <div class="stat-number">3/2</div>
+                    <div class="stat-label">ระดับชั้นปัจจุบัน</div>
+                </div>
+                <div class="glass-card stat-card">
+                    <div class="stat-number">4.00</div>
+                    <div class="stat-label">วิชาคอมพิวเตอร์</div>
+                </div>
+                <div class="glass-card stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">ความมุ่งมั่นในการเรียนรู้</div>
                 </div>
             </div>
         </section>
     </main>
 
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-info">
+                <a href="index.html" class="nav-logo">PORTFOLIO<span>.M3</span></a>
+                <p>โครงงานวิชาคอมพิวเตอร์ ชั้นมัธยมศึกษาปีที่ 3</p>
+                <p>จัดทำโดย ด.ช.สิรวิชญ์ ตระกลบุษบง ม.3/2</p>
+            </div>
+            <div class="footer-nav">
+                <h4>ลิงก์ด่วน</h4>
+                <ul>
+                    <li><a href="index.html">หน้าแรก</a></li>
+                    <li><a href="profile.html">ประวัติส่วนตัว</a></li>
+                    <li><a href="education.html">การศึกษา</a></li>
+                    <li><a href="hobby.html">งานอดิเรก</a></li>
+                    <li><a href="contact.html">ติดต่อ</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Student Portfolio Project. All Rights Reserved.</p>
+        </div>
+    </footer>
+
     <script>
-        // Background particles
-        const bgCanvas = document.getElementById('neon-canvas');
-        const bgCtx = bgCanvas.getContext('2d');
-        bgCanvas.width = window.innerWidth;
-        bgCanvas.height = window.innerHeight;
+        // --- 1. สคริปต์ละอองดาวม่วงนีออน (Neon Particles Background) ---
+        const neonCanvas = document.getElementById('neon-canvas');
+        const neonCtx = neonCanvas.getContext('2d');
+        let bgParticles = [];
 
-        let particles = Array.from({length: 50}, () => ({
-            x: Math.random() * bgCanvas.width,
-            y: Math.random() * bgCanvas.height,
-            size: Math.random() * 2 + 1,
-            speedY: Math.random() * 0.5 - 0.25
-        }));
-
-        function drawBg() {
-            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-            bgCtx.fillStyle = '#c084fc';
-            particles.forEach(p => {
-                p.y += p.speedY;
-                if(p.y < 0 || p.y > bgCanvas.height) p.speedY *= -1;
-                bgCtx.beginPath();
-                bgCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                bgCtx.fill();
-            });
-            requestAnimationFrame(drawBg);
+        function resizeNeonCanvas() {
+            neonCanvas.width = window.innerWidth;
+            neonCanvas.height = window.innerHeight;
         }
-        drawBg();
+        window.addEventListener('resize', resizeNeonCanvas);
+        resizeNeonCanvas();
 
-        // Atomic Effect Engine
+        class BgParticle {
+            constructor() {
+                this.x = Math.random() * neonCanvas.width;
+                this.y = Math.random() * neonCanvas.height;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.alpha = Math.random();
+                this.alphaSpeed = Math.random() * 0.02 + 0.005;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > neonCanvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > neonCanvas.height) this.speedY *= -1;
+                this.alpha += this.alphaSpeed;
+                if (this.alpha > 1 || this.alpha < 0) this.alphaSpeed *= -1;
+            }
+            draw() {
+                neonCtx.save();
+                neonCtx.globalAlpha = Math.abs(this.alpha);
+                neonCtx.beginPath();
+                neonCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                neonCtx.fillStyle = '#c084fc';
+                neonCtx.shadowColor = '#a855f7';
+                neonCtx.shadowBlur = 10;
+                neonCtx.fill();
+                neonCtx.restore();
+            }
+        }
+
+        for (let i = 0; i < 60; i++) bgParticles.push(new BgParticle());
+
+        function animateBgParticles() {
+            neonCtx.clearRect(0, 0, neonCanvas.width, neonCanvas.height);
+            bgParticles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateBgParticles);
+        }
+        animateBgParticles();
+
+
+        // --- 2. สคริปต์ Canvas สำหรับเอฟเฟกต์ "I AM ATOMIC" + ฟันดาบ + ตัวอักษรแตกกระจาย ---
         const atomicCanvas = document.getElementById('atomic-canvas');
         const ctx = atomicCanvas.getContext('2d');
-        atomicCanvas.width = window.innerWidth;
-        atomicCanvas.height = window.innerHeight;
+        let currentAudio = null;
+        let animationFrameId = null;
+
+        function resizeAtomicCanvas() {
+            atomicCanvas.width = window.innerWidth;
+            atomicCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeAtomicCanvas);
+        resizeAtomicCanvas();
 
         let shatterParticles = [];
 
+        // ตัวคลาสจัดการเศษตัวอักษรที่แตกกระจาย
         class ShatterParticle {
             constructor(x, y, char) {
-                this.x = x; this.y = y; this.char = char;
+                this.x = x;
+                this.y = y;
+                this.char = char;
                 const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 10 + 3;
+                const speed = Math.random() * 12 + 4;
                 this.vx = Math.cos(angle) * speed;
-                this.vy = Math.sin(angle) * speed;
+                this.vy = Math.sin(angle) * speed - 2;
+                this.rot = 0;
+                this.vRot = (Math.random() - 0.5) * 0.3;
                 this.alpha = 1;
+                this.size = Math.random() * 20 + 35;
             }
             update() {
-                this.x += this.vx; this.y += this.vy;
-                this.vy += 0.2; this.alpha -= 0.02;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.2;
+                this.rot += this.vRot;
+                this.alpha -= 0.015;
             }
             draw() {
                 ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rot);
                 ctx.globalAlpha = Math.max(0, this.alpha);
-                ctx.font = "bold 40px 'Cinzel', serif";
-                ctx.fillStyle = '#c084fc';
-                ctx.fillText(this.char, this.x, this.y);
+                ctx.font = `900 ${this.size}px 'Cinzel', serif`;
+                ctx.fillStyle = '#ffffff';
+                ctx.shadowColor = '#c084fc';
+                ctx.shadowBlur = 20;
+                ctx.fillText(this.char, 0, 0);
                 ctx.restore();
             }
         }
 
         function triggerAtomic() {
             const overlay = document.getElementById('atomic-overlay');
-            overlay.classList.add('active');
+            const slashLine = document.getElementById('slash-line');
+            
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
             shatterParticles = [];
+            overlay.classList.add('active');
+            overlay.classList.remove('slashing');
+
+            // เล่นเสียงประกอบ
+            try {
+                if (currentAudio) {
+                    currentAudio.pause();
+                    currentAudio.currentTime = 0;
+                }
+                currentAudio = new Audio('atomic.mp3');
+                currentAudio.play().catch(e => console.log('Audio playing skipped/blocked'));
+            } catch(e) {}
 
             let startTime = performance.now();
             let isShattered = false;
 
-            function render(now) {
+            function renderLoop(now) {
                 let elapsed = now - startTime;
-                ctx.clearRect(0, 0, atomicCanvas.width, atomicCanvas.height);
-
-                let cx = atomicCanvas.width / 2;
-                let cy = atomicCanvas.height / 2;
-
-                if (elapsed < 1200) {
-                    ctx.save();
-                    ctx.font = "900 60px 'Cinzel', serif";
-                    ctx.textAlign = 'center';
-                    ctx.fillStyle = '#ffffff';
-                    ctx.shadowColor = '#a855f7';
-                    ctx.shadowBlur = 30;
-                    ctx.fillText("I AM ATOMIC", cx, cy);
-                    ctx.restore();
-                } else if (!isShattered) {
-                    overlay.classList.add('slashing');
-                    isShattered = true;
-                    const text = "I AM ATOMIC";
-                    for (let i = 0; i < text.length; i++) {
-                        if (text[i] !== ' ') {
-                            for(let k=0; k<3; k++) {
-                                shatterParticles.push(new ShatterParticle(cx - 150 + (i * 25), cy, text[i]));
-                            }
-                        }
-                    }
-                }
-
-                if (isShattered) {
-                    shatterParticles.forEach(p => { p.update(); p.draw(); });
-                }
-
-                if (elapsed < 3000) {
-                    requestAnimationFrame(render);
-                } else {
-                    overlay.classList.remove('active', 'slashing');
-                }
-            }
-            requestAnimationFrame(render);
-        }
-    </script>
-</body>
-    </html>
-    
+                ctx.
