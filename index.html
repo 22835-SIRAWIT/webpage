@@ -1,88 +1,325 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>หน้าแรก | Student Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header class="navbar-header">
-        <nav class="navbar">
-            <a href="index.html" class="nav-logo">PORTFOLIO<span>.M3</span></a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link active">หน้าแรก</a></li>
-                <li><a href="profile.html" class="nav-link">ประวัติส่วนตัว</a></li>
-                <li><a href="education.html" class="nav-link">การศึกษา</a></li>
-                <li><a href="hobby.html" class="nav-link">งานอดิเรก</a></li>
-                <li><a href="contact.html" class="nav-link">ติดต่อ</a></li>
-            </ul>
-        </nav>
-    </header>
+/* style.css */
 
-    <main class="main-content">
-        <section class="hero-section">
-            <div class="hero-container">
-                <div class="hero-text">
-                    <div class="badge">Welcome to my world</div>
-                    <h1 class="hero-title">สวัสดีครับ! ผมชื่อ <span class="gradient-text">ด.ช.สิรวิชญ์ ตระกลบุษบง</span></h1>
-                    <p class="hero-subtitle">นักเรียนชั้นมัธยมศึกษาปีที่ 3/2 โรงเรียนจอมทอง ผู้มีความสนใจในด้านเทคโนโลยี โค้ดดิ้ง และการดีไซน์</p>
-                    <div class="hero-actions">
-                        <a href="profile.html" class="btn btn-primary">รู้จักฉันมากขึ้น</a>
-                        <a href="hobby.html" class="btn btn-secondary">ดูงานอดิเรกของฉัน</a>
-                    </div>
-                </div>
-                <div class="hero-visual">
-                    <div class="profile-glow"></div>
-                    <div class="profile-card-wrapper">
-                        <img src="images/download.jpg" width= "500" hight = "700" >
-                    </div>
-                </div>
-            </div>
-        </section>
+/* --- ส่วนกำหนดค่าตัวแปรสีหลัก (Color Variables) --- */
+/* กำหนดสีที่นี่เพื่อให้ง่ายต่อการแก้ไขทั้งเว็บไซต์ */
+:root {
+  /* โทนสีพื้นหลัง (Dark Shades) */
+  --bg-primary: #101010;    /* สีดำเกือบสนิท สำหรับพื้นหลังหลัก */
+  --bg-secondary: #1a1a1a;  /* สีดำอมเทา สำหรับส่วนที่ต้องการตัดกันเล็กน้อย */
+  --bg-card: #222222;       /* สีดำอมเทาอ่อน สำหรับการ์ดข้อมูล */
+  
+  /* โทนสีตัวอักษร (Text Shades) */
+  --text-main: #f0f0f0;      /* สีขาวหม่น สำหรับข้อความทั่วไป */
+  --text-sub: #b0b0b0;       /* สีเทา สำหรับข้อความย่อย */
+  --text-on-dark: #ffffff;   /* สีขาวบริสุทธิ์ สำหรับข้อความบนปุ่มสีม่วง */
 
-        <section class="quick-highlights">
-            <div class="highlight-grid">
-                <div class="glass-card stat-card">
-                    <div class="stat-number">3/2</div>
-                    <div class="stat-label">ระดับชั้นปัจจุบัน</div>
-                </div>
-                <div class="glass-card stat-card">
-                    <div class="stat-number">4.00</div>
-                    <div class="stat-label">วิชาคอมพิวเตอร์</div>
-                </div>
-                <div class="glass-card stat-card">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">ความมุ่งมั่นในการเรียนรู้</div>
-                </div>
-            </div>
-        </section>
-    </main>
+  /* โทนสีเน้น (Accent Shades) */
+  --color-purple: #8e44ad;   /* สีม่วงเข้ม */
+  --color-neon-purple: #a569bd; /* สีม่วงอ่อนลงมาหน่อย */
+  --color-bright-purple: #bb8fce; /* สีม่วงสว่าง */
+}
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-info">
-                <a href="index.html" class="nav-logo">PORTFOLIO<span>.M3</span></a>
-                <p>โครงงานวิชาคอมพิวเตอร์ ชั้นมัธยมศึกษาปีที่ 3</p>
-                <p>จัดทำโดย ด.ช.สิรวิชญ์ ตระกลบุษบง ม.3/2</p>
-            </div>
-            <div class="footer-nav">
-                <h4>ลิงก์ด่วน</h4>
-                <ul>
-                    <li><a href="index.html">หน้าแรก</a></li>
-                    <li><a href="profile.html">ประวัติส่วนตัว</a></li>
-                    <li><a href="education.html">การศึกษา</a></li>
-                    <li><a href="hobby.html">งานอดิเรก</a></li>
-                    <li><a href="contact.html">ติดต่อ</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Student Portfolio Project. All Rights Reserved.</p>
-        </div>
-    </footer>
-</body>
-</html>
+/* --- การตั้งค่าพื้นฐาน --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Prompt', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+/* --- ส่วนหัวเว็บไซต์ (Navbar Header) --- */
+.navbar-header {
+  background-color: var(--bg-secondary);
+  border-bottom: 2px solid var(--color-purple); /* เพิ่มเส้นขอบด้านล่างสีม่วง */
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.nav-logo span {
+  color: var(--color-purple); /* เปลี่ยนสีโลโก้ส่วนท้ายเป็นม่วง */
+}
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-link {
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--color-bright-purple); /* สีม่วงสว่างเมื่อโฮเวอร์หรือ Active */
+}
+
+/* --- ส่วนเนื้อหาหลัก (Main Content) --- */
+.main-content {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.hero-section {
+  padding: 4rem 0;
+}
+
+.hero-container {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.hero-text {
+  flex: 1;
+}
+
+.badge {
+  display: inline-block;
+  background-color: var(--bg-card);
+  color: var(--color-bright-purple); /* ข้อความใน Badge เป็นม่วง */
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--color-purple); /* เพิ่มเส้นขอบสีม่วง */
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--color-bright-purple) 0%, var(--color-purple) 100%); /* เอฟเฟกต์สีไล่ระดับม่วง */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--color-bright-purple); /* Fallback color */
+}
+
+.hero-subtitle {
+  color: var(--text-sub);
+  margin-bottom: 2rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* --- ปุ่ม (Buttons) --- */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: var(--color-purple);
+  color: var(--text-on-dark);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-neon-purple); /* เปลี่ยนเป็นสีม่วงอ่อนเมื่อโฮเวอร์ */
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-bright-purple);
+  border: 2px solid var(--color-purple);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-card); /* เปลี่ยนสีพื้นหลังเล็กน้อยเมื่อโฮเวอร์ */
+}
+
+/* --- ส่วนภาพ (Hero Visual) --- */
+.hero-visual {
+  flex: 1;
+  position: relative;
+}
+
+.profile-card-wrapper img {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  border: 3px solid var(--bg-card); /* เพิ่มเส้นขอบรอบรูป */
+}
+
+.profile-glow {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: var(--color-neon-purple); /* สีเอฟเฟกต์เรืองแสง */
+  border-radius: 10px;
+  filter: blur(50px);
+  opacity: 0.3;
+  z-index: -1;
+}
+
+/* --- ส่วนไฮไลท์ (Quick Highlights) --- */
+.quick-highlights {
+  margin-top: 4rem;
+}
+
+.highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.glass-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--color-purple); /* เส้นขอบสีม่วง */
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-bright-purple); /* สีตัวเลขเป็นม่วงสว่าง */
+}
+
+.stat-label {
+  color: var(--text-sub);
+}
+
+/* --- ส่วนท้ายเว็บไซต์ (Site Footer) --- */
+.site-footer {
+  background-color: var(--bg-secondary);
+  padding: 3rem 0;
+  border-top: 2px solid var(--color-purple); /* เพิ่มเส้นขอบสีม่วงด้านบน */
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-info {
+  flex: 1;
+}
+
+.footer-info p {
+  color: var(--text-sub);
+  margin-bottom: 0.5rem;
+}
+
+.footer-nav {
+  flex: 1;
+  text-align: right;
+}
+
+.footer-nav h4 {
+  color: var(--text-main);
+  margin-bottom: 1rem;
+}
+
+.footer-nav ul {
+  list-style: none;
+}
+
+.footer-nav ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-nav ul li a {
+  color: var(--text-sub);
+}
+
+.footer-nav ul li a:hover {
+  color: var(--color-bright-purple); /* สีม่วงเมื่อโฮเวอร์ */
+}
+
+.footer-bottom {
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+}
+
+/* --- ส่วน Responsive (Mobile First) --- */
+@media (max-width: 768px) {
+  .hero-container {
+    flex-direction: column-reverse; /* สลับภาพขึ้นบนในมือถือ */
+    text-align: center;
+    gap: 2rem;
+  }
+  
+  .hero-visual {
+    margin-bottom: 2rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    background-color: var(--bg-secondary);
+    padding: 1rem 0;
+    display: none; /* เริ่มต้นซ่อนเมนูไว้ */
+  }
+  
+  .navbar-header.show-menu .nav-menu {
+    display: flex; /* แสดงเมนูเมื่อกดปุ่ม */
+  }
+
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+  
+  .footer-nav {
+    text-align: center;
+  }
+}
