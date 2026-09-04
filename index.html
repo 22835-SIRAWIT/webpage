@@ -447,7 +447,7 @@
         }
         animateBgParticles();
 
-        // 2. Audio & Sequenced FX Control (ซิงค์ตรงตามจังหวะเสียงใหม่และเส้นฟันดาบตรงกลาง)
+        // 2. Audio & Sequenced FX Control (ซิงค์ตรงตามความยาวเสียง 9 วินาที)
         document.addEventListener('DOMContentLoaded', function() {
             const btnAtomic = document.getElementById('btn-atomic-power');
             const overlay = document.getElementById('atomic-overlay');
@@ -479,19 +479,19 @@
                     // แสดง Overlay
                     overlay.classList.add('active');
 
-                    // จังหวะแสดงคำพูด
-                    setTimeout(() => wordI.classList.add('show'), 100);       // ขึ้น "I" (0.1s)
-                    setTimeout(() => wordAm.classList.add('show'), 800);      // ขึ้น "AM" (0.8s)
-                    setTimeout(() => wordAtomic.classList.add('show'), 1600); // ขึ้น "ATOMIC" (1.6s)
+                    // จังหวะพูด (กระจายตามช่วงเวลา)
+                    setTimeout(() => wordI.classList.add('show'), 200);        // 1.0 วินาที: "I"
+                    setTimeout(() => wordAm.classList.add('show'), 1500);      // 2.7 วินาที: "AM"
+                    setTimeout(() => wordAtomic.classList.add('show'), 3000);  // 5.5 วินาที: "ATOMIC"
                     
-                    // จังหวะฟันดาบเฉือนผ่านตัวอักษรพอดี (1.9s)
-                    setTimeout(() => overlay.classList.add('slashing'), 1900); 
+                    // จังหวะฟันดาบ/ปล่อยพลัง (ประมาณวินาทีที่ 6.0)
+                    setTimeout(() => overlay.classList.add('slashing'), 4200); 
 
-                    // จังหวะระเบิดและตัวอักษรแตกกระจาย (2.0s)
-                    setTimeout(() => overlay.classList.add('exploding'), 2000); 
+                    // จังหวะระเบิดตู้มกระแทกตาและตัวอักษรแตกกระจาย (ประมาณวินาทีที่ 6.7)
+                    setTimeout(() => overlay.classList.add('exploding'), 4500); 
                     
-                    // ปิด Overlay ซ่อนเอฟเฟกต์ (3.5s)
-                    setTimeout(() => overlay.classList.remove('active', 'slashing', 'exploding'), 3500);
+                    // ค้างเอฟเฟกต์ระเบิดไว้จนกว่าเสียงสะท้อนระเบิดจะจบลงทั้งหมด (9.0 วินาที)
+                    setTimeout(() => overlay.classList.remove('active', 'slashing', 'exploding'), 9000);
                 };
 
                 btnAtomic.addEventListener('touchstart', handlePlay, { passive: false });
