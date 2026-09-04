@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     
+    <!-- โหลด Three.js สำหรับการแสดงผลกราฟิก 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
     <style>
         :root {
             --purple-bright: #d8b4fe;
@@ -201,7 +204,7 @@
         .footer-nav ul li a:hover { color: var(--purple-bright); text-shadow: 0 0 10px var(--purple-neon); }
         .footer-bottom { text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-muted); font-size: 0.85rem; }
 
-        /* ================= ATOMIC OVERLAY & GLASS SHATTER ================= */
+        /* ================= ATOMIC OVERLAY & 3D CANVAS ================= */
         #atomic-overlay {
             position: fixed;
             top: 0; left: 0;
@@ -220,7 +223,8 @@
             pointer-events: auto;
         }
 
-        #shatter-canvas {
+        /* 3D WebGL Canvas */
+        #webgl-3d-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
@@ -404,7 +408,9 @@
 
     <audio id="atomic-sound" src="atomic_4.mp3" preload="auto" playsinline></audio>
     <canvas id="neon-canvas"></canvas>
-    <canvas id="shatter-canvas"></canvas>
+    
+    <!-- 3D WebGL Canvas Canvas สำหรับฉากกระจกแตก 3D -->
+    <canvas id="webgl-3d-canvas"></canvas>
 
     <div id="atomic-overlay">
         <div class="slash-effect"></div>
@@ -531,68 +537,120 @@
         }
         animateBgParticles();
 
-        // 2. GLASS SHATTER ENGINE
-        const shatterCanvas = document.getElementById('shatter-canvas');
-        const sCtx = shatterCanvas.getContext('2d');
-        let shards = [];
-        let shatterAnimId = null;
+        // ================= 2. THREE.JS 3D EXPLOSION ENGINE =================
+        const webglCanvas = document.getElementById('webgl-3d-canvas');
+        let scene, camera, renderer, shardGroup;
+        let shards3D = [];
+        let anim3DId = null;
 
-        function initShatterCanvas() {
-            shatterCanvas.width = window.innerWidth;
-            shatterCanvas.height = window.innerHeight;
+        function init3D() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 25;
+
+            renderer = new THREE.WebGLRenderer({ canvas: webglCanvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // แสงไฟสำหรับวัตถุ 3D
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+            scene.add(ambientLight);
+
+            const pointLight = new THREE.PointLight(0xc084fc, 2.5, 100);
+            pointLight.position.set(0, 0, 15);
+            scene.add(pointLight);
+
+            shardGroup = new THREE.Group();
+            scene.add(shardGroup);
         }
-        window.addEventListener('resize', initShatterCanvas);
-        initShatterCanvas();
 
-        function createShards() {
-            shards = [];
-            const w = shatterCanvas.width;
-            const h = shatterCanvas.height;
-            const rows = 12;
-            const cols = 16;
-            const cellW = w / cols;
-            const cellH = h / rows;
+        window.addEventListener('resize', () => {
+            if (renderer && camera) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
 
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    const x = c * cellW;
-                    const y = r * cellH;
-                    
-                    const centerX = x + cellW / 2;
-                    const centerY = y + cellH / 2;
-                    const angle = Math.atan2(centerY - h / 2, centerX - w / 2) + (Math.random() - 0.5) * 0.5;
-                    const force = 15 + Math.random() * 35;
+        init3D();
 
-                    shards.push({
-                        x: x,
-                        y: y,
-                        w: cellW,
-                        h: cellH,
-                        origX: x,
-                        origY: y,
-                        vx: Math.cos(angle) * force,
-                        vy: Math.sin(angle) * force,
-                        rot: 0,
-                        vRot: (Math.random() - 0.5) * 0.3,
-                        opacity: 1,
-                        progress: 0
-                    });
-                }
+        function create3DShards() {
+            // ล้างวัตถุเดิมออก
+            while (shardGroup.children.length > 0) {
+                const obj = shardGroup.children[0];
+                obj.geometry.dispose();
+                obj.material.dispose();
+                shardGroup.remove(obj);
+            }
+            shards3D = [];
+
+            const count = 120; // จำนวนเศษกระจก 3D
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xc084fc,
+                emissive: 0x4a148c,
+                specular: 0xffffff,
+                shininess: 100,
+                transparent: true,
+                opacity: 0.85,
+                side: THREE.DoubleSide
+            });
+
+            for (let i = 0; i < count; i++) {
+                // สร้างรูปทรงเศษกระจกสามเหลี่ยม 3D
+                const shape = new THREE.Shape();
+                const size = 0.5 + Math.random() * 1.2;
+                shape.moveTo(0, 0);
+                shape.lineTo(size, Math.random() * size);
+                shape.lineTo(Math.random() * size, size);
+                shape.closePath();
+
+                const extrudeSettings = { depth: 0.1, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.02, bevelThickness: 0.02 };
+                const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+
+                const mesh = new THREE.Mesh(geometry, material.clone());
+
+                // กำหนดตำแหน่งเริ่มต้นให้อยู่รวมกันใจกลางหน้าจอ
+                const initX = (Math.random() - 0.5) * 12;
+                const initY = (Math.random() - 0.5) * 8;
+                const initZ = 0;
+
+                mesh.position.set(initX, initY, initZ);
+
+                // สุ่มทิศทางความเร็วการระเบิดในแนว 3D (X, Y, Z)
+                const angle = Math.atan2(initY, initX) + (Math.random() - 0.5) * 0.5;
+                const speed = 12 + Math.random() * 25;
+
+                const dirX = Math.cos(angle) * speed;
+                const dirY = Math.sin(angle) * speed;
+                const dirZ = (Math.random() - 0.3) * 35; // กระจายพุ่งออกหาหน้าจอผู้ใช้ (3D Z-axis)
+
+                const rotSpeed = {
+                    x: (Math.random() - 0.5) * 0.2,
+                    y: (Math.random() - 0.5) * 0.2,
+                    z: (Math.random() - 0.5) * 0.2
+                };
+
+                shardGroup.add(mesh);
+
+                shards3D.push({
+                    mesh: mesh,
+                    origPos: new THREE.Vector3(initX, initY, initZ),
+                    targetVel: new THREE.Vector3(dirX, dirY, dirZ),
+                    rotSpeed: rotSpeed
+                });
             }
         }
 
-        function triggerShatterEffect(durationMs = 4200) {
-            shatterCanvas.style.display = 'block';
-            createShards();
+        function trigger3DShatterEffect(durationMs = 4200) {
+            webglCanvas.style.display = 'block';
+            create3DShards();
             const startTime = performance.now();
 
-            function renderShatter(now) {
+            function render3D(now) {
                 const elapsed = now - startTime;
                 const halfDuration = durationMs / 2;
 
-                sCtx.clearRect(0, 0, shatterCanvas.width, shatterCanvas.height);
-
-                let phase = 0; // 0 -> 1 (กระจาย) -> 0 (ย้อนกลับ)
+                let phase = 0; // 0 -> 1 (พุ่งระเบิด 3D) -> 0 (ย้อนเวลากลับมารวมกัน)
                 if (elapsed < halfDuration) {
                     phase = elapsed / halfDuration;
                     phase = Math.sin(phase * Math.PI / 2);
@@ -600,37 +658,30 @@
                     phase = 1 - ((elapsed - halfDuration) / halfDuration);
                     phase = Math.cos((1 - phase) * Math.PI / 2);
                 } else {
-                    sCtx.clearRect(0, 0, shatterCanvas.width, shatterCanvas.height);
-                    shatterCanvas.style.display = 'none';
+                    webglCanvas.style.display = 'none';
                     return;
                 }
 
-                shards.forEach(s => {
-                    sCtx.save();
-                    const currentX = s.origX + s.vx * phase * 15;
-                    const currentY = s.origY + s.vy * phase * 15;
-                    const currentRot = s.vRot * phase * 20;
+                shards3D.forEach(s => {
+                    // เคลื่อนที่ตำแหน่งแบบ 3D ย้อนกลับไปมาตาม Phase
+                    s.mesh.position.x = s.origPos.x + s.targetVel.x * phase * 0.8;
+                    s.mesh.position.y = s.origPos.y + s.targetVel.y * phase * 0.8;
+                    s.mesh.position.z = s.origPos.z + s.targetVel.z * phase * 0.8;
 
-                    sCtx.translate(currentX + s.w / 2, currentY + s.h / 2);
-                    sCtx.rotate(currentRot);
+                    // หมุนวัตถุในระบบสามมิติ
+                    s.mesh.rotation.x += s.rotSpeed.x;
+                    s.mesh.rotation.y += s.rotSpeed.y;
+                    s.mesh.rotation.z += s.rotSpeed.z;
 
-                    sCtx.fillStyle = `rgba(192, 132, 252, ${0.15 + phase * 0.45})`;
-                    sCtx.strokeStyle = `rgba(255, 255, 255, ${0.4 + phase * 0.6})`;
-                    sCtx.lineWidth = 1.5;
-
-                    sCtx.beginPath();
-                    sCtx.rect(-s.w / 2, -s.h / 2, s.w, s.h);
-                    sCtx.fill();
-                    sCtx.stroke();
-
-                    sCtx.restore();
+                    s.mesh.material.opacity = 0.3 + phase * 0.7;
                 });
 
-                shatterAnimId = requestAnimationFrame(renderShatter);
+                renderer.render(scene, camera);
+                anim3DId = requestAnimationFrame(render3D);
             }
 
-            if (shatterAnimId) cancelAnimationFrame(shatterAnimId);
-            shatterAnimId = requestAnimationFrame(renderShatter);
+            if (anim3DId) cancelAnimationFrame(anim3DId);
+            anim3DId = requestAnimationFrame(render3D);
         }
 
         // 3. Clock Rewind Animation Engine (หมุนเข็มนาฬิกาทวนเข็ม)
@@ -646,7 +697,6 @@
                 const elapsed = now - startTime;
                 if (elapsed <= durationMs) {
                     const progress = elapsed / durationMs;
-                    // เข็มยาวหมุนย้อนกลับ 12 รอบ (-4320 deg) เข็มสั้นหมุนย้อนกลับ 1 รอบ (-360 deg)
                     const minAngle = -progress * 4320;
                     const hourAngle = -progress * 360;
 
@@ -704,10 +754,10 @@
                     // จังหวะฟันดาบ
                     setTimeout(() => overlay.classList.add('slashing'), 4200); 
 
-                    // จังหวะระเบิด + เริ่มต้นระบบจอแตกและนาฬิกาย้อนเวลา
+                    // จังหวะระเบิด 3D + เริ่มต้นระบบระเบิดสามมิติและนาฬิกาย้อนเวลา
                     setTimeout(() => {
                         overlay.classList.add('exploding');
-                        triggerShatterEffect(4200); 
+                        trigger3DShatterEffect(4200); 
                         startClockRewind(4200);
                     }, 4500); 
                     
