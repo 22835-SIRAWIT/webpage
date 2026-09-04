@@ -146,7 +146,7 @@
             text-shadow: 0 0 25px rgba(192, 132, 252, 0.4);
         }
         .hero-subtitle { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 2.5rem; }
-        .hero-actions { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+        .hero-actions { display: flex; gap: 1.2rem; flex-wrap: wrap; align-items: center; }
 
         .btn { padding: 0.8rem 1.8rem; border-radius: 12px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; }
         .btn-primary { background: linear-gradient(135deg, #a855f7, #6b21a8); color: #fff; box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); border: none; }
@@ -165,6 +165,31 @@
             background: #c084fc; color: #000;
             box-shadow: 0 0 40px #c084fc, 0 0 80px rgba(192, 132, 252, 0.6);
             transform: scale(1.05); font-weight: 700;
+        }
+
+        /* ปุ่ม T ดีไซน์พิเศษ */
+        .btn-t-slash {
+            background: linear-gradient(135deg, #2e1065, #000000);
+            color: #e9d5ff;
+            border: 2px solid #a855f7;
+            border-radius: 12px;
+            font-family: 'Cinzel', serif;
+            font-weight: 900;
+            font-size: 1.2rem;
+            padding: 0.75rem 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-t-slash:hover {
+            transform: translateY(-4px) scale(1.08);
+            border-color: #ffffff;
+            color: #ffffff;
+            box-shadow: 0 0 30px #c084fc, 0 0 60px #a855f7;
+            text-shadow: 0 0 10px #ffffff;
         }
 
         .hero-visual { flex: 0.8; display: flex; justify-content: center; position: relative; }
@@ -227,6 +252,84 @@
             z-index: 999999;
             pointer-events: none;
             display: none;
+        }
+
+        /* ================= SHADOW CHARACTER ANIMATION ================= */
+        #shadow-character-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 999997;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            background: rgba(5, 2, 10, 0.85);
+            backdrop-filter: blur(8px);
+        }
+
+        #shadow-character-container.active {
+            display: flex;
+        }
+
+        .shadow-avatar {
+            max-width: 650px;
+            max-height: 85vh;
+            object-fit: contain;
+            filter: drop-shadow(0 0 35px #c084fc) drop-shadow(0 0 70px #a855f7);
+            opacity: 0;
+            transform: scale(0.6) translateY(100px);
+            transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        #shadow-character-container.appear .shadow-avatar {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        #shadow-character-container.slash-attack .shadow-avatar {
+            animation: shadowSlashAnim 0.4s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+        }
+
+        @keyframes shadowSlashAnim {
+            0% { transform: scale(1) translateY(0) rotate(0deg); }
+            40% { transform: scale(1.25) translateY(-20px) rotate(-8deg); filter: drop-shadow(0 0 80px #ffffff) drop-shadow(0 0 120px #c084fc); }
+            100% { transform: scale(1.4) translateY(40px) rotate(12deg); opacity: 0; filter: blur(10px); }
+        }
+
+        /* Cross Slash Cut Effect */
+        .cross-slash {
+            position: absolute;
+            width: 150vw;
+            height: 10px;
+            background: linear-gradient(90deg, transparent, #ffffff, #c084fc, #ffffff, transparent);
+            box-shadow: 0 0 30px #ffffff, 0 0 60px #a855f7, 0 0 100px #c084fc;
+            opacity: 0;
+            z-index: 1000000;
+        }
+
+        .slash-1 {
+            top: 50%; left: -25vw;
+            transform: rotate(-25deg) scaleX(0);
+        }
+
+        .slash-2 {
+            top: 50%; left: -25vw;
+            transform: rotate(35deg) scaleX(0);
+        }
+
+        #shadow-character-container.slashing-lines .slash-1 {
+            animation: triggerCrossSlash 0.25s ease-out forwards;
+        }
+
+        #shadow-character-container.slashing-lines .slash-2 {
+            animation: triggerCrossSlash 0.25s ease-out 0.1s forwards;
+        }
+
+        @keyframes triggerCrossSlash {
+            0% { transform: rotate(var(--rot, -25deg)) scaleX(0); opacity: 1; }
+            50% { opacity: 1; height: 16px; }
+            100% { transform: rotate(var(--rot, -25deg)) scaleX(1); opacity: 0; height: 2px; }
         }
 
         /* ================= TIME REWIND CLOCK FX ================= */
@@ -406,6 +509,13 @@
     <canvas id="neon-canvas"></canvas>
     <canvas id="shatter-canvas"></canvas>
 
+    <!-- Shadow Character Display Layer -->
+    <div id="shadow-character-container">
+        <div class="cross-slash slash-1" style="--rot: -25deg;"></div>
+        <div class="cross-slash slash-2" style="--rot: 35deg;"></div>
+        <img src="images_8f7c24.jpg" alt="Shadow Character" class="shadow-avatar" onerror="this.src='https://i.imgur.com/8f7c24.jpg'">
+    </div>
+
     <div id="atomic-overlay">
         <div class="slash-effect"></div>
         <div class="shockwave-effect"></div>
@@ -460,6 +570,7 @@
                         <a href="profile.html" class="btn btn-primary">รู้จักฉันมากขึ้น</a>
                         <a href="hobby.html" class="btn btn-secondary">ดูงานอดิเรกของฉัน</a>
                         <button type="button" id="btn-atomic-power" class="btn btn-atomic">🔮 กดปลดปล่อยพลัง</button>
+                        <button type="button" id="btn-shadow-t" class="btn-t-slash">⚔️ T</button>
                     </div>
                 </div>
                 <div class="hero-visual">
@@ -633,7 +744,7 @@
             shatterAnimId = requestAnimationFrame(renderShatter);
         }
 
-        // 3. Clock Rewind Animation Engine (หมุนเข็มนาฬิกาทวนเข็ม)
+        // 3. Clock Rewind Animation Engine
         let clockAnimId = null;
         function startClockRewind(durationMs = 4200) {
             const hourHand = document.getElementById('clock-hour');
@@ -646,7 +757,6 @@
                 const elapsed = now - startTime;
                 if (elapsed <= durationMs) {
                     const progress = elapsed / durationMs;
-                    // เข็มยาวหมุนย้อนกลับ 12 รอบ (-4320 deg) เข็มสั้นหมุนย้อนกลับ 1 รอบ (-360 deg)
                     const minAngle = -progress * 4320;
                     const hourAngle = -progress * 360;
 
@@ -673,6 +783,10 @@
             const wordAm = document.getElementById('w-am');
             const wordAtomic = document.getElementById('w-atomic');
 
+            // ปุ่ม T และตัวละคร Shadow
+            const btnT = document.getElementById('btn-shadow-t');
+            const shadowContainer = document.getElementById('shadow-character-container');
+
             if (btnAtomic && overlay && sound) {
                 const handlePlay = function(e) {
                     if (e) e.preventDefault();
@@ -697,21 +811,21 @@
                     overlay.classList.add('active');
 
                     // จังหวะพูด
-                    setTimeout(() => wordI.classList.add('show'), 200);        // "I"
-                    setTimeout(() => wordAm.classList.add('show'), 1500);      // "AM"
-                    setTimeout(() => wordAtomic.classList.add('show'), 3000);  // "ATOMIC"
+                    setTimeout(() => wordI.classList.add('show'), 200);
+                    setTimeout(() => wordAm.classList.add('show'), 1500);
+                    setTimeout(() => wordAtomic.classList.add('show'), 3000);
                     
                     // จังหวะฟันดาบ
                     setTimeout(() => overlay.classList.add('slashing'), 4200); 
 
-                    // จังหวะระเบิด + เริ่มต้นระบบจอแตกและนาฬิกาย้อนเวลา
+                    // จังหวะระเบิด
                     setTimeout(() => {
                         overlay.classList.add('exploding');
                         triggerShatterEffect(4200); 
                         startClockRewind(4200);
                     }, 4500); 
                     
-                    // ปิด Overlay ซ่อนเอฟเฟกต์เมื่อเล่นจบสมบูรณ์ (9.0 วินาที)
+                    // ปิด Overlay
                     setTimeout(() => {
                         overlay.classList.remove('active', 'slashing', 'exploding');
                     }, 9000);
@@ -719,6 +833,52 @@
 
                 btnAtomic.addEventListener('touchstart', handlePlay, { passive: false });
                 btnAtomic.addEventListener('click', handlePlay);
+            }
+
+            // ระบบการทำงานเมื่อกดปุ่ม T
+            if (btnT && shadowContainer) {
+                const handleTClick = function(e) {
+                    if (e) e.preventDefault();
+
+                    // เล่นเสียงหากมี
+                    if (sound) {
+                        sound.currentTime = 0;
+                        sound.volume = 1.0;
+                        sound.play().catch(() => {});
+                    }
+
+                    // รีเซ็ตคลาส
+                    shadowContainer.className = '';
+                    shadowContainer.classList.add('active');
+
+                    // 1. ตัวละครปรากฏตัวขึ้นมาจากความมืด
+                    setTimeout(() => {
+                        shadowContainer.classList.add('appear');
+                    }, 50);
+
+                    // 2. ตัวละครพุ่งเข้ามาฟัน
+                    setTimeout(() => {
+                        shadowContainer.classList.add('slash-attack');
+                    }, 1200);
+
+                    // 3. รอยฟันตัดหน้าจอ
+                    setTimeout(() => {
+                        shadowContainer.classList.add('slashing-lines');
+                    }, 1400);
+
+                    // 4. หน้าจอแตกสลาย
+                    setTimeout(() => {
+                        triggerShatterEffect(3500);
+                    }, 1500);
+
+                    // 5. ปิดเอฟเฟกต์ทั้งหมด
+                    setTimeout(() => {
+                        shadowContainer.className = '';
+                    }, 4800);
+                };
+
+                btnT.addEventListener('touchstart', handleTClick, { passive: false });
+                btnT.addEventListener('click', handleTClick);
             }
         });
     </script>
