@@ -236,7 +236,7 @@
         }
 
         #atomic-overlay.slashing .slash-effect {
-            animation: slashTrigger 0.22s cubic-bezier(0.05, 0.9, 0.1, 1) forwards;
+            animation: slashTrigger 0.18s cubic-bezier(0.05, 0.9, 0.1, 1) forwards;
         }
 
         @keyframes slashTrigger {
@@ -336,7 +336,8 @@
 </head>
 <body>
 
-    <audio id="atomic-sound" src="https://myinstants.com/media/sounds/i-am-atomic.mp3" preload="auto" playsinline></audio>
+    <!-- ใช้ออดิโอในเครื่อง/Data URI หรือแทน URL ตรงนี้ด้วยไฟล์เสียงที่คุณให้มาได้เลยครับ -->
+    <audio id="atomic-sound" src="data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAA..." preload="auto" playsinline></audio>
 
     <canvas id="neon-canvas"></canvas>
 
@@ -444,7 +445,7 @@
         }
         animateBgParticles();
 
-        // 2. Audio & Sequenced FX Control (Sync กับ mp3)
+        // 2. Audio & Sequenced FX Control (ซิงค์ตรงตามจังหวะเสียงใหม่เป๊ะๆ)
         document.addEventListener('DOMContentLoaded', function() {
             const btnAtomic = document.getElementById('btn-atomic-power');
             const overlay = document.getElementById('atomic-overlay');
@@ -476,19 +477,27 @@
                     // แสดง Overlay
                     overlay.classList.add('active');
 
-                    // ลำดับการแสดงผลซิงค์กับไฟล์ mp3:
-                    setTimeout(() => wordI.classList.add('show'), 200);       // "I" (0.2 วินาที)
-                    setTimeout(() => wordAm.classList.add('show'), 800);      // "AM" (0.8 วินาที)
-                    setTimeout(() => wordAtomic.classList.add('show'), 1600);  // "ATOMIC" (1.6 วินาที)
+                    /* 
+                       ปรับจังหวะ Sync ใหม่ตาม Audio Track:
+                       - 0.3s : เสียงพูด "I" 
+                       - 1.3s : เสียงพูด "AM"
+                       - 2.4s : เสียงพูด "ATOMIC"
+                       - 3.75s : เสียงดาบ Slash ฟันตัดผ่านตัวอักษร
+                       - 3.90s : เสียงระเบิดตูมใหญ่ + เสียงกรีดร้องลากยาว
+                       - 6.5s : จบเอฟเฟกต์และซ่อน Overlay
+                    */
+                    setTimeout(() => wordI.classList.add('show'), 300);       // ขึ้นคำว่า "I"
+                    setTimeout(() => wordAm.classList.add('show'), 1300);     // ขึ้นคำว่า "AM"
+                    setTimeout(() => wordAtomic.classList.add('show'), 2400); // ขึ้นคำว่า "ATOMIC"
                     
-                    // 1. ฟันคมกริบตรงกับเสียง Slash ในไฟล์เสียง (2.15 วินาที)
-                    setTimeout(() => overlay.classList.add('slashing'), 2150); 
+                    // 1. ฟันดาบตัดผ่านข้อความ (3.75 วินาที)
+                    setTimeout(() => overlay.classList.add('slashing'), 3750); 
                     
-                    // 2. ระเบิดตื่นตาตื่นใจพร้อมตัวอักษรแตกกระจาย (2.35 วินาที)
-                    setTimeout(() => overlay.classList.add('exploding'), 2350); 
+                    // 2. คลื่นระเบิดและตัวอักษรแตกกระจาย (3.90 วินาที)
+                    setTimeout(() => overlay.classList.add('exploding'), 3900); 
                     
-                    // ปิด Overlay กลับสู่หน้าปกติเมื่อเล่นเสร็จ (4.2 วินาที)
-                    setTimeout(() => overlay.classList.remove('active', 'slashing', 'exploding'), 4200);
+                    // 3. ปิด Overlay กลับสู่หน้าปกติเมื่อเล่นเสร็จครบเสียงระเบิดและเสียงกรีดร้อง (6.5 วินาที)
+                    setTimeout(() => overlay.classList.remove('active', 'slashing', 'exploding'), 6500);
                 };
 
                 btnAtomic.addEventListener('touchstart', handlePlay, { passive: false });
