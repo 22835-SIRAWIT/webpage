@@ -6,7 +6,7 @@
     <title>หน้าแรก | Student Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Cinzel:wght@900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -229,6 +229,63 @@
             display: none;
         }
 
+        /* ================= TIME REWIND CLOCK FX ================= */
+        #time-rewind-clock {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 380px; height: 380px;
+            margin-top: -190px; margin-left: -190px;
+            border-radius: 50%;
+            border: 2px solid rgba(192, 132, 252, 0.6);
+            box-shadow: 0 0 40px #c084fc, inset 0 0 30px #a855f7;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(5, 2, 10, 0.6) 70%);
+            z-index: 5;
+            opacity: 0;
+            transform: scale(0.5) rotate(0deg);
+            transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.1, 0.8, 0.2, 1);
+            pointer-events: none;
+        }
+
+        #atomic-overlay.exploding #time-rewind-clock {
+            opacity: 1;
+            transform: scale(1) rotate(-180deg);
+        }
+
+        .clock-face { position: relative; width: 100%; height: 100%; }
+        .clock-num {
+            position: absolute;
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #e9d5ff;
+            text-shadow: 0 0 12px #c084fc;
+        }
+        .num-12 { top: 15px; left: 50%; transform: translateX(-50%); }
+        .num-3  { right: 20px; top: 50%; transform: translateY(-50%); }
+        .num-6  { bottom: 15px; left: 50%; transform: translateX(-50%); }
+        .num-9  { left: 20px; top: 50%; transform: translateY(-50%); }
+
+        .clock-hand {
+            position: absolute;
+            bottom: 50%; left: 50%;
+            transform-origin: bottom center;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 0 15px #c084fc, 0 0 25px #a855f7;
+        }
+        .hand-hour { width: 6px; height: 90px; margin-left: -3px; }
+        .hand-minute { width: 4px; height: 130px; margin-left: -2px; }
+        .clock-center {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 16px; height: 16px;
+            margin-top: -8px; margin-left: -8px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 15px #c084fc;
+        }
+
+        /* ================= SLASH & SHOCKWAVE ================= */
         .slash-effect {
             position: absolute;
             top: 50%; left: -20%;
@@ -300,6 +357,10 @@
             .highlight-grid {
                 grid-template-columns: 1fr;
             }
+            #time-rewind-clock {
+                width: 280px; height: 280px;
+                margin-top: -140px; margin-left: -140px;
+            }
         }
 
         .word-group {
@@ -348,6 +409,20 @@
     <div id="atomic-overlay">
         <div class="slash-effect"></div>
         <div class="shockwave-effect"></div>
+        
+        <!-- นาฬิกาเวทมนตร์ย้อนเวลา -->
+        <div id="time-rewind-clock">
+            <div class="clock-face">
+                <span class="clock-num num-12">XII</span>
+                <span class="clock-num num-3">III</span>
+                <span class="clock-num num-6">VI</span>
+                <span class="clock-num num-9">IX</span>
+                <div class="clock-hand hand-hour" id="clock-hour"></div>
+                <div class="clock-hand hand-minute" id="clock-minute"></div>
+                <div class="clock-center"></div>
+            </div>
+        </div>
+
         <div class="atomic-text-wrapper">
             <div class="word-group word-i" id="w-i">
                 <span class="shatter-char">I</span>
@@ -456,7 +531,7 @@
         }
         animateBgParticles();
 
-        // 2. GLASS SHATTER ENGINE (ระบบกระจกแตกแล้วหมุนย้อนกลับ)
+        // 2. GLASS SHATTER ENGINE
         const shatterCanvas = document.getElementById('shatter-canvas');
         const sCtx = shatterCanvas.getContext('2d');
         let shards = [];
@@ -483,7 +558,6 @@
                     const x = c * cellW;
                     const y = r * cellH;
                     
-                    // สุ่มจุดระเบิดให้ออกจากจุดศูนย์กลาง
                     const centerX = x + cellW / 2;
                     const centerY = y + cellH / 2;
                     const angle = Math.atan2(centerY - h / 2, centerX - w / 2) + (Math.random() - 0.5) * 0.5;
@@ -501,13 +575,13 @@
                         rot: 0,
                         vRot: (Math.random() - 0.5) * 0.3,
                         opacity: 1,
-                        progress: 0 // 0 = ปกติ, 1 = ปลิวสูงสุด, 2 = ย้อนกลับสมบูรณ์
+                        progress: 0
                     });
                 }
             }
         }
 
-        function triggerShatterEffect(durationMs = 4000) {
+        function triggerShatterEffect(durationMs = 4200) {
             shatterCanvas.style.display = 'block';
             createShards();
             const startTime = performance.now();
@@ -518,13 +592,13 @@
 
                 sCtx.clearRect(0, 0, shatterCanvas.width, shatterCanvas.height);
 
-                let phase = 0; // 0 -> 1 (ระเบิดแตกกระจาย), 1 -> 0 (ย้อนเวลากลับ)
+                let phase = 0; // 0 -> 1 (กระจาย) -> 0 (ย้อนกลับ)
                 if (elapsed < halfDuration) {
                     phase = elapsed / halfDuration;
-                    phase = Math.sin(phase * Math.PI / 2); // Easing out
+                    phase = Math.sin(phase * Math.PI / 2);
                 } else if (elapsed < durationMs) {
                     phase = 1 - ((elapsed - halfDuration) / halfDuration);
-                    phase = Math.cos((1 - phase) * Math.PI / 2); // Easing in reverse
+                    phase = Math.cos((1 - phase) * Math.PI / 2);
                 } else {
                     sCtx.clearRect(0, 0, shatterCanvas.width, shatterCanvas.height);
                     shatterCanvas.style.display = 'none';
@@ -533,8 +607,6 @@
 
                 shards.forEach(s => {
                     sCtx.save();
-                    
-                    // คำนวณตำแหน่งและองศาหมุนตาม Phase เวลา
                     const currentX = s.origX + s.vx * phase * 15;
                     const currentY = s.origY + s.vy * phase * 15;
                     const currentRot = s.vRot * phase * 20;
@@ -542,7 +614,6 @@
                     sCtx.translate(currentX + s.w / 2, currentY + s.h / 2);
                     sCtx.rotate(currentRot);
 
-                    // วาดแผ่นกระจกเรืองแสง
                     sCtx.fillStyle = `rgba(192, 132, 252, ${0.15 + phase * 0.45})`;
                     sCtx.strokeStyle = `rgba(255, 255, 255, ${0.4 + phase * 0.6})`;
                     sCtx.lineWidth = 1.5;
@@ -562,7 +633,38 @@
             shatterAnimId = requestAnimationFrame(renderShatter);
         }
 
-        // 3. Audio & Sequenced FX Control
+        // 3. Clock Rewind Animation Engine (หมุนเข็มนาฬิกาทวนเข็ม)
+        let clockAnimId = null;
+        function startClockRewind(durationMs = 4200) {
+            const hourHand = document.getElementById('clock-hour');
+            const minuteHand = document.getElementById('clock-minute');
+            if (!hourHand || !minuteHand) return;
+
+            const startTime = performance.now();
+
+            function animateClock(now) {
+                const elapsed = now - startTime;
+                if (elapsed <= durationMs) {
+                    const progress = elapsed / durationMs;
+                    // เข็มยาวหมุนย้อนกลับ 12 รอบ (-4320 deg) เข็มสั้นหมุนย้อนกลับ 1 รอบ (-360 deg)
+                    const minAngle = -progress * 4320;
+                    const hourAngle = -progress * 360;
+
+                    minuteHand.style.transform = `rotate(${minAngle}deg)`;
+                    hourHand.style.transform = `rotate(${hourAngle}deg)`;
+
+                    clockAnimId = requestAnimationFrame(animateClock);
+                } else {
+                    minuteHand.style.transform = 'rotate(0deg)';
+                    hourHand.style.transform = 'rotate(0deg)';
+                }
+            }
+
+            if (clockAnimId) cancelAnimationFrame(clockAnimId);
+            clockAnimId = requestAnimationFrame(animateClock);
+        }
+
+        // 4. Audio & Sequenced FX Control
         document.addEventListener('DOMContentLoaded', function() {
             const btnAtomic = document.getElementById('btn-atomic-power');
             const overlay = document.getElementById('atomic-overlay');
@@ -585,7 +687,7 @@
                         });
                     }
 
-                    // ล้าง Class สถานะเดิมทั้งหมด
+                    // ล้างสถานะเดิม
                     overlay.classList.remove('active', 'slashing', 'exploding');
                     wordI.classList.remove('show');
                     wordAm.classList.remove('show');
@@ -602,10 +704,11 @@
                     // จังหวะฟันดาบ
                     setTimeout(() => overlay.classList.add('slashing'), 4200); 
 
-                    // จังหวะระเบิด + เริ่มต้นระบบจอแตกและย้อนเวลากลับ
+                    // จังหวะระเบิด + เริ่มต้นระบบจอแตกและนาฬิกาย้อนเวลา
                     setTimeout(() => {
                         overlay.classList.add('exploding');
-                        triggerShatterEffect(4200); // เล่นเอฟเฟกต์แตกกระจายแล้วย้อนกลับ 7.3 วินาที
+                        triggerShatterEffect(4200); 
+                        startClockRewind(4200);
                     }, 4500); 
                     
                     // ปิด Overlay ซ่อนเอฟเฟกต์เมื่อเล่นจบสมบูรณ์ (9.0 วินาที)
