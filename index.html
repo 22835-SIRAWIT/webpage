@@ -220,16 +220,18 @@
             pointer-events: auto;
         }
 
-        /* 1. SLASH EFFECT (เอฟเฟกต์ฟันตัดผ่านข้อความ) */
+        /* 1. SLASH EFFECT (เอฟเฟกต์ฟันตัดผ่านข้อความ - ปรับให้อยู่กึ่งกลางข้อความพอดี) */
         .slash-effect {
             position: absolute;
-            top: 50%; left: -20%;
-            width: 140%; height: 8px;
-            margin-top: -4px;
+            top: 50%;
+            left: -20%;
+            width: 140%; 
+            height: 12px;
+            margin-top: -6px;
             background: linear-gradient(90deg, transparent 0%, #ffffff 30%, #e9d5ff 50%, #ffffff 70%, transparent 100%);
             box-shadow: 0 0 25px #ffffff, 0 0 50px #c084fc, 0 0 100px #a855f7;
-            transform: rotate(-15deg) scaleX(0);
-            transform-origin: left center;
+            transform-origin: center center;
+            transform: rotate(-5deg) scaleX(0);
             opacity: 0;
             z-index: 100;
             pointer-events: none;
@@ -240,9 +242,9 @@
         }
 
         @keyframes slashTrigger {
-            0% { transform: rotate(-15deg) scaleX(0); opacity: 1; }
-            50% { opacity: 1; height: 16px; }
-            100% { transform: rotate(-15deg) scaleX(1); opacity: 0.8; height: 4px; }
+            0% { transform: rotate(-5deg) scaleX(0); opacity: 1; }
+            50% { opacity: 1; height: 18px; }
+            100% { transform: rotate(-5deg) scaleX(1); opacity: 0.8; height: 4px; }
         }
 
         /* 2. EXPLOSION SHOCKWAVE (เอฟเฟกต์คลื่นระเบิด) */
@@ -336,8 +338,8 @@
 </head>
 <body>
 
-    <!-- ใช้ออดิโอในเครื่อง/Data URI หรือแทน URL ตรงนี้ด้วยไฟล์เสียงที่คุณให้มาได้เลยครับ -->
-   <audio id="atomic-sound" src="atomic.mp3" preload="auto" playsinline></audio>
+    <!-- ลิงก์ไปยังไฟล์เสียง atomic_2.mp3 -->
+    <audio id="atomic-sound" src="atomic_2.mp3" preload="auto" playsinline></audio>
 
     <canvas id="neon-canvas"></canvas>
 
@@ -445,7 +447,7 @@
         }
         animateBgParticles();
 
-        // 2. Audio & Sequenced FX Control (ซิงค์ตรงตามจังหวะเสียงใหม่เป๊ะๆ)
+        // 2. Audio & Sequenced FX Control (ซิงค์ตรงตามจังหวะเสียงใหม่และเส้นฟันดาบตรงกลาง)
         document.addEventListener('DOMContentLoaded', function() {
             const btnAtomic = document.getElementById('btn-atomic-power');
             const overlay = document.getElementById('atomic-overlay');
@@ -477,27 +479,19 @@
                     // แสดง Overlay
                     overlay.classList.add('active');
 
-                    /* 
-                       ปรับจังหวะ Sync ใหม่ตาม Audio Track:
-                       - 0.3s : เสียงพูด "I" 
-                       - 1.3s : เสียงพูด "AM"
-                       - 2.4s : เสียงพูด "ATOMIC"
-                       - 3.75s : เสียงดาบ Slash ฟันตัดผ่านตัวอักษร
-                       - 3.90s : เสียงระเบิดตูมใหญ่ + เสียงกรีดร้องลากยาว
-                       - 6.5s : จบเอฟเฟกต์และซ่อน Overlay
-                    */
-                    setTimeout(() => wordI.classList.add('show'), 300);       // ขึ้นคำว่า "I"
-                    setTimeout(() => wordAm.classList.add('show'), 1300);     // ขึ้นคำว่า "AM"
-                    setTimeout(() => wordAtomic.classList.add('show'), 2400); // ขึ้นคำว่า "ATOMIC"
+                    // จังหวะแสดงคำพูด
+                    setTimeout(() => wordI.classList.add('show'), 100);       // ขึ้น "I" (0.1s)
+                    setTimeout(() => wordAm.classList.add('show'), 800);      // ขึ้น "AM" (0.8s)
+                    setTimeout(() => wordAtomic.classList.add('show'), 1600); // ขึ้น "ATOMIC" (1.6s)
                     
-                    // 1. ฟันดาบตัดผ่านข้อความ (3.75 วินาที)
-                    setTimeout(() => overlay.classList.add('slashing'), 3750); 
+                    // จังหวะฟันดาบเฉือนผ่านตัวอักษรพอดี (1.9s)
+                    setTimeout(() => overlay.classList.add('slashing'), 1900); 
+
+                    // จังหวะระเบิดและตัวอักษรแตกกระจาย (2.0s)
+                    setTimeout(() => overlay.classList.add('exploding'), 2000); 
                     
-                    // 2. คลื่นระเบิดและตัวอักษรแตกกระจาย (3.90 วินาที)
-                    setTimeout(() => overlay.classList.add('exploding'), 3900); 
-                    
-                    // 3. ปิด Overlay กลับสู่หน้าปกติเมื่อเล่นเสร็จครบเสียงระเบิดและเสียงกรีดร้อง (6.5 วินาที)
-                    setTimeout(() => overlay.classList.remove('active', 'slashing', 'exploding'), 6500);
+                    // ปิด Overlay ซ่อนเอฟเฟกต์ (3.5s)
+                    setTimeout(() => overlay.classList.remove('active', 'slashing', 'exploding'), 3500);
                 };
 
                 btnAtomic.addEventListener('touchstart', handlePlay, { passive: false });
