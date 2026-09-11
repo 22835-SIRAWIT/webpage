@@ -350,7 +350,6 @@
     <canvas id="neon-canvas"></canvas>
     <canvas id="shatter-canvas"></canvas>
 
-    <!-- Shadow Character Display Layer (ใช้อัปเดตลิงก์รูปภาพสำรองที่แสดงผลแน่นอน) -->
     <div id="shadow-character-container">
         <div class="cross-slash slash-1" style="--rot: -25deg;"></div>
         <div class="cross-slash slash-2" style="--rot: 35deg;"></div>
@@ -594,33 +593,47 @@
             const btnT = document.getElementById('btn-shadow-t');
             const shadowContainer = document.getElementById('shadow-character-container');
 
-            if (btnAtomic && overlay && sound) {
-                const handlePlay = function(e) {
-                    if (e) e.preventDefault();
+            const handlePlay = function(e) {
+                if (e) e.preventDefault();
+                
+                if (sound) {
                     sound.currentTime = 0;
                     sound.volume = 1.0;
-                    sound.play().catch(() => {});
+                    sound.play().catch((error) => {
+                        console.error("Audio error:", error);
+                        alert("โปรดคลิกที่หน้าจอ 1 ครั้งก่อนกดปุ่ม F5 เพื่อให้เบราว์เซอร์อนุญาตให้เล่นเสียงครับ (" + error.message + ")");
+                    });
+                }
 
+                overlay.classList.remove('active', 'slashing', 'exploding');
+                wordI.classList.remove('show');
+                wordAm.classList.remove('show');
+                wordAtomic.classList.remove('show');
+
+                overlay.classList.add('active');
+                setTimeout(() => wordI.classList.add('show'), 200);
+                setTimeout(() => wordAm.classList.add('show'), 1500);
+                setTimeout(() => wordAtomic.classList.add('show'), 3000);
+                setTimeout(() => overlay.classList.add('slashing'), 4200); 
+                setTimeout(() => {
+                    overlay.classList.add('exploding');
+                    triggerShatterEffect(4200); 
+                    startClockRewind(4200);
+                }, 4500); 
+                setTimeout(() => {
                     overlay.classList.remove('active', 'slashing', 'exploding');
-                    wordI.classList.remove('show');
-                    wordAm.classList.remove('show');
-                    wordAtomic.classList.remove('show');
+                }, 9000);
+            };
 
-                    overlay.classList.add('active');
-                    setTimeout(() => wordI.classList.add('show'), 200);
-                    setTimeout(() => wordAm.classList.add('show'), 1500);
-                    setTimeout(() => wordAtomic.classList.add('show'), 3000);
-                    setTimeout(() => overlay.classList.add('slashing'), 4200); 
-                    setTimeout(() => {
-                        overlay.classList.add('exploding');
-                        triggerShatterEffect(4200); 
-                        startClockRewind(4200);
-                    }, 4500); 
-                    setTimeout(() => {
-                        overlay.classList.remove('active', 'slashing', 'exploding');
-                    }, 9000);
-                };
+            // ดักจับการกดปุ่ม F5 (หรือคลิกขวา -> Reload แบบบางเบราว์เซอร์)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F5' || e.keyCode === 116) {
+                    e.preventDefault();
+                    handlePlay();
+                }
+            });
 
+            if (btnAtomic && overlay) {
                 btnAtomic.addEventListener('touchstart', handlePlay, { passive: false });
                 btnAtomic.addEventListener('click', handlePlay);
             }
@@ -631,7 +644,9 @@
                     if (sound) {
                         sound.currentTime = 0;
                         sound.volume = 1.0;
-                        sound.play().catch(() => {});
+                        sound.play().catch((error) => {
+                            console.error("Audio error:", error);
+                        });
                     }
 
                     shadowContainer.className = '';
