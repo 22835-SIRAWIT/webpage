@@ -3,106 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ประวัติส่วนตัว | Student Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>ประวัติส่วนตัว | My Portfolio</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header class="navbar-header">
-        <nav class="navbar">
-            <a href="index.html" class="nav-logo">PORTFOLIO<span>.M3</span></a>
-            <ul class="nav-menu">
-                <li><a href="index.html" class="nav-link">หน้าแรก</a></li>
-                <li><a href="profile.html" class="nav-link active">ประวัติส่วนตัว</a></li>
-                <li><a href="education.html" class="nav-link">การศึกษา</a></li>
-                <li><a href="hobby.html" class="nav-link">งานอดิเรก</a></li>
-                <li><a href="contact.html" class="nav-link">ติดต่อ</a></li>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">My<span>Portfolio</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="profile.html" class="active">ประวัติส่วนตัว</a></li>
+                <li><a href="education.html">การศึกษา</a></li>
+                <li><a href="hobby.html">งานอดิเรก</a></li>
+                <li><a href="contact.html">ติดต่อ</a></li>
             </ul>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <main class="main-content">
-        <section class="page-header">
-            <h1 class="page-title">ประวัติส่วนตัว <span class="gradient-text">(About Me)</span></h1>
-            <p class="page-subtitle">ทำความรู้จักกับตัวตนและเป้าหมายของฉัน</p>
-        </section>
+    <main class="page-container fade-in-up">
+        <div class="section-header">
+            <h2>ประวัติส่วนตัว <span>(Profile)</span></h2>
+            <div class="divider"></div>
+        </div>
 
-        <section class="profile-layout">
-            <div class="profile-sidebar glass-card">
-                <div class="profile-avatar-container">
-                    <img src="images/download.jpg">
+        <div class="profile-layout">
+            <div class="profile-left">
+                <div class="profile-card">
+                    <img src="https://placehold.co/300x300/42A5F5/FFFFFF?text=My+Photo" alt="รูปของฉัน" class="profile-img">
+                    <h3>ด.ช. สมชาย ใจดี</h3>
+                    <p class="tagline">"การเรียนรู้ไม่มีวันสิ้นสุด"</p>
                 </div>
-                <h2 class="profile-name"> ด.ช.สิรวิชญ์ ตระกลบุษบง </h2>
-                <span class="profile-tag">นักเรียนมัธยมศึกษาปีที่ 3/2</span>
             </div>
-
-            <div class="profile-details">
-                <div class="glass-card detail-box">
-                    <h3>ข้อมูลพื้นฐาน</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">ชื่อเล่น</span>
-                            <span class="info-value">พีท</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">อายุ</span>
-                            <span class="info-value">14 ปี</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">วันเกิด</span>
-                            <span class="info-value">8/3/2555</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">จังหวัด</span>
-                            <span class="info-value">เชียงใหม่</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass-card detail-box">
+            
+            <div class="profile-right">
+                <div class="info-card">
                     <h3>เกี่ยวกับฉัน</h3>
-                    <p class="bio-text">
-                        สวัสดีครับ ผมเป็นนักเรียนชั้น ม.3 ที่มีความตั้งใจศึกษาหาความรู้ใหม่ๆ อยู่เสมอ โดยเฉพาะในด้านคอมพิวเตอร์ เทคโนโลยี และเทคโนโลยีสารสนเทศ ในเวลาว่างผมชอบศึกษาการเขียนโค้ด การออกแบบกราฟิก และทดลองสร้างสรรค์ชิ้นงานใหม่ๆ
-                    </p>
+                    <p>สวัสดีครับ ผมชื่อ สมชาย ใจดี (ชาย) เป็นคนชอบเรียนรู้สิ่งใหม่ๆ โดยเฉพาะเรื่องของคอมพิวเตอร์และเทคโนโลยี ผมชอบทดลองสร้างสรรค์ผลงานด้วยตัวเอง และมีความฝันอยากเป็นนักพัฒนาซอฟต์แวร์ในอนาคต</p>
                 </div>
 
-                <div class="glass-card detail-box">
-                    <h3>จุดเด่น & ความสนใจ</h3>
-                    <div class="tags-wrapper">
-                        <span class="tag">การเขียนโปรแกรม</span>
-                        <span class="tag">การออกแบบ UI/UX</span>
-                        <span class="tag">วิชาคณิตศาสตร์</span>
-                        <span class="tag">พละ</span>
-                        <span class="tag">เกมเพื่อการเรียนรู้</span>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <span class="info-label">ชื่อเล่น</span>
+                        <span class="info-value">ชาย</span>
+                    </div>
+                    <div class="info-box">
+                        <span class="info-label">อายุ</span>
+                        <span class="info-value">15 ปี</span>
+                    </div>
+                    <div class="info-box">
+                        <span class="info-label">วันเกิด</span>
+                        <span class="info-value">15 มกราคม 2554</span>
+                    </div>
+                    <div class="info-box">
+                        <span class="info-label">จังหวัด</span>
+                        <span class="info-value">เชียงใหม่</span>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-info">
-                <a href="index.html" class="nav-logo">PORTFOLIO<span>.M3</span></a>
-                <p>โครงงานวิชาคอมพิวเตอร์ ชั้นมัธยมศึกษาปีที่ 3</p>
-                <p>จัดทำโดย ด.ช.สิรวิชญ์ ตระกลบุษบง ม.3/2</p>
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 สมชาย ใจดี | นักเรียนชั้น ม.3/1</p>
+            <div class="footer-links">
+                <a href="index.html">หน้าแรก</a> | 
+                <a href="contact.html">ติดต่อฉัน</a>
             </div>
-            <div class="footer-nav">
-                <h4>ลิงก์ด่วน</h4>
-                <ul>
-                    <li><a href="index.html">หน้าแรก</a></li>
-                    <li><a href="profile.html">ประวัติส่วนตัว</a></li>
-                    <li><a href="education.html">การศึกษา</a></li>
-                    <li><a href="hobby.html">งานอดิเรก</a></li>
-                    <li><a href="contact.html">ติดต่อ</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Student Portfolio Project. All Rights Reserved.</p>
         </div>
     </footer>
+
 </body>
 </html>
